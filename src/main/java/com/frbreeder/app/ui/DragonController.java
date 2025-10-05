@@ -1,7 +1,7 @@
 package com.frbreeder.app.ui;
 
-import com.frbreeder.app.domain.Dragon;
 import com.frbreeder.app.domain.DragonService;
+import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
 import java.net.URI;
 import java.util.List;
@@ -15,11 +15,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 @RequestMapping("/dragons")
-public class DragonListController {
+public class DragonController {
 
     private final DragonService dragonService;
 
-    public DragonListController(final DragonService dragonService) {
+    public DragonController(final DragonService dragonService) {
         this.dragonService = dragonService;
     }
 

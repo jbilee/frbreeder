@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import java.util.HashMap;
 import java.util.List;

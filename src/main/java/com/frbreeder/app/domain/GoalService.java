@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.domain.entity.Goal;
 import com.frbreeder.app.infrastructure.GoalRepository;
 import java.util.HashMap;
 import java.util.List;

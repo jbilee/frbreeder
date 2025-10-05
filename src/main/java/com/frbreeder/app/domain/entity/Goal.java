@@ -1,4 +1,4 @@
-package com.frbreeder.app.domain;
+package com.frbreeder.app.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,14 +8,13 @@ import jakarta.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "dragons")
-public class Dragon {
+@Table(name = "goals")
+public class Goal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
     private String breed;
     private String gender;
     private String primaryGene;
@@ -27,11 +26,10 @@ public class Dragon {
     private String eyeType;
     private String flight;
 
-    protected Dragon() {
+    protected Goal() {
     }
 
-    public Dragon(
-            final String name,
+    public Goal(
             final String breed,
             final String gender,
             final String primaryGene,
@@ -43,7 +41,6 @@ public class Dragon {
             final String eyeType,
             final String flight
     ) {
-        this.name = name;
         this.breed = breed;
         this.gender = gender.equals("0") ? "M" : "F";
         this.primaryGene = primaryGene;
@@ -58,10 +55,6 @@ public class Dragon {
 
     public long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getBreed() {
@@ -107,8 +100,8 @@ public class Dragon {
     @Override
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        final Dragon dragon = (Dragon) o;
-        return Objects.equals(id, dragon.id);
+        final Goal goal = (Goal) o;
+        return Objects.equals(id, goal.id);
     }
 
     @Override

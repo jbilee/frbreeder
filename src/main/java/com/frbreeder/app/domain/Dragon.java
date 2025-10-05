@@ -30,6 +30,36 @@ public class Dragon {
     protected Dragon() {
     }
 
+    public Dragon(
+            final String name,
+            final String breed,
+            final String gender,
+            final String primaryGene,
+            final String secondaryGene,
+            final String tertiaryGene,
+            final String primaryColor,
+            final String secondaryColor,
+            final String tertiaryColor,
+            final String eyeType,
+            final String flight
+    ) {
+        this.name = name;
+        this.breed = breed;
+        this.gender = gender.equals("0") ? "M" : "F";
+        this.primaryGene = primaryGene;
+        this.secondaryGene = secondaryGene;
+        this.tertiaryGene = tertiaryGene;
+        this.primaryColor = primaryColor;
+        this.secondaryColor = secondaryColor;
+        this.tertiaryColor = tertiaryColor;
+        this.eyeType = eyeType;
+        this.flight = flight;
+    }
+
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

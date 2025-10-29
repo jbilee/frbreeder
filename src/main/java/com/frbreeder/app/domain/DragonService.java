@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.domain.entity.Color;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import java.util.HashMap;
@@ -42,12 +43,16 @@ public class DragonService {
                 queries.get("bodygene"),
                 queries.get("winggene"),
                 queries.get("tertgene"),
-                queries.get("body"),
-                queries.get("wings"),
-                queries.get("tert"),
-                queries.get("eyetype"),
+                getColorFromScry(queries.get("body")),
+                getColorFromScry(queries.get("wings")),
+                getColorFromScry(queries.get("tert")),
                 queries.get("element")
         );
+    }
+
+    private Color getColorFromScry(final String colorId) {
+        FrColor frColor = FrColor.findByFrId(Integer.parseInt(colorId));
+        return new Color(frColor.getFrId(), frColor.getName(), frColor.getGradientOrder());
     }
 
 }

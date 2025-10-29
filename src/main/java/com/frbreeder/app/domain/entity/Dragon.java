@@ -1,9 +1,11 @@
 package com.frbreeder.app.domain.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 
@@ -21,10 +23,16 @@ public class Dragon {
     private String primaryGene;
     private String secondaryGene;
     private String tertiaryGene;
-    private String primaryColor;
-    private String secondaryColor;
-    private String tertiaryColor;
-    private String eyeType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Color primaryColor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Color secondaryColor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Color tertiaryColor;
+
     private String flight;
 
     protected Dragon() {
@@ -37,10 +45,9 @@ public class Dragon {
             final String primaryGene,
             final String secondaryGene,
             final String tertiaryGene,
-            final String primaryColor,
-            final String secondaryColor,
-            final String tertiaryColor,
-            final String eyeType,
+            final Color primaryColor,
+            final Color secondaryColor,
+            final Color tertiaryColor,
             final String flight
     ) {
         this.name = name;
@@ -52,7 +59,6 @@ public class Dragon {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.tertiaryColor = tertiaryColor;
-        this.eyeType = eyeType;
         this.flight = flight;
     }
 
@@ -84,20 +90,16 @@ public class Dragon {
         return tertiaryGene;
     }
 
-    public String getPrimaryColor() {
+    public Color getPrimaryColor() {
         return primaryColor;
     }
 
-    public String getSecondaryColor() {
+    public Color getSecondaryColor() {
         return secondaryColor;
     }
 
-    public String getTertiaryColor() {
+    public Color getTertiaryColor() {
         return tertiaryColor;
-    }
-
-    public String getEyeType() {
-        return eyeType;
     }
 
     public String getFlight() {

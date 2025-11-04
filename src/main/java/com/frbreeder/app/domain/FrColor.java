@@ -1,7 +1,10 @@
 package com.frbreeder.app.domain;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public enum FrColor {
 
@@ -183,6 +186,7 @@ public enum FrColor {
     ROSE(67, 176, "Rose"),
     PEARL(85, 177, "Pearl");
 
+    public static final int TOTAL_COLORS = 177;
     private static final Map<Integer, FrColor> CACHE = new HashMap<>();
 
     static {
@@ -203,6 +207,31 @@ public enum FrColor {
 
     public static FrColor findByFrId(final int id) {
         return CACHE.get(id);
+    }
+
+    public static List<String> getInnerColors(final int start, final int end) {
+        return CACHE.values().stream()
+                .filter(color -> color.gradientOrder >= start && color.gradientOrder <= end)
+                .sorted(Comparator.comparing(FrColor::getGradientOrder))
+                .map(color -> color.name)
+                .toList();
+    }
+
+    public static List<String> getOuterColors(final int start, final int end) {
+        List<String> startingHalf = CACHE.values().stream()
+                .filter(color -> color.gradientOrder <= start)
+                .sorted(Comparator.comparing(FrColor::getGradientOrder))
+                .map(color -> color.name)
+                .toList();
+
+        List<String> endingHalf = CACHE.values().stream()
+                .filter(color -> color.gradientOrder >= end)
+                .sorted(Comparator.comparing(FrColor::getGradientOrder))
+                .map(color -> color.name)
+                .toList();
+
+        return Stream.concat(endingHalf.stream(), startingHalf.stream())
+                .toList();
     }
 
     public int getFrId() {

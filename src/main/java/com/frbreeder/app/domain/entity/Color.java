@@ -54,4 +54,12 @@ public class Color {
         }
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getGradientOrder() {
+        return gradientOrder;
+    }
+
 }

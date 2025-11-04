@@ -18,11 +18,19 @@ public class Dragon {
     private Long id;
 
     private String name;
-    private String breed;
     private String gender;
-    private String primaryGene;
-    private String secondaryGene;
-    private String tertiaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Gene primaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Gene secondaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Gene tertiaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Breed breed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Color primaryColor;
@@ -40,11 +48,11 @@ public class Dragon {
 
     public Dragon(
             final String name,
-            final String breed,
+            final Breed breed,
             final String gender,
-            final String primaryGene,
-            final String secondaryGene,
-            final String tertiaryGene,
+            final Gene primaryGene,
+            final Gene secondaryGene,
+            final Gene tertiaryGene,
             final Color primaryColor,
             final Color secondaryColor,
             final Color tertiaryColor,
@@ -70,7 +78,7 @@ public class Dragon {
         return name;
     }
 
-    public String getBreed() {
+    public Breed getBreed() {
         return breed;
     }
 
@@ -78,15 +86,15 @@ public class Dragon {
         return gender;
     }
 
-    public String getPrimaryGene() {
+    public Gene getPrimaryGene() {
         return primaryGene;
     }
 
-    public String getSecondaryGene() {
+    public Gene getSecondaryGene() {
         return secondaryGene;
     }
 
-    public String getTertiaryGene() {
+    public Gene getTertiaryGene() {
         return tertiaryGene;
     }
 

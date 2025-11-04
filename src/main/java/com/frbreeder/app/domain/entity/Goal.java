@@ -1,9 +1,11 @@
 package com.frbreeder.app.domain.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 
@@ -15,41 +17,53 @@ public class Goal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String breed;
     private String gender;
-    private String primaryGene;
-    private String secondaryGene;
-    private String tertiaryGene;
-    private String primaryColor;
-    private String secondaryColor;
-    private String tertiaryColor;
-    private String eyeType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Breed breed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Gene primaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Gene secondaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Gene tertiaryGene;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Color primaryColor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Color secondaryColor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Color tertiaryColor;
+
     private String flight;
 
     protected Goal() {
     }
 
     public Goal(
-            final String breed,
-            final String gender,
-            final String primaryGene,
-            final String secondaryGene,
-            final String tertiaryGene,
-            final String primaryColor,
-            final String secondaryColor,
-            final String tertiaryColor,
-            final String eyeType,
+            final Breed breed,
+            final int gender,
+            final Gene primaryGene,
+            final Gene secondaryGene,
+            final Gene tertiaryGene,
+            final Color primaryColor,
+            final Color secondaryColor,
+            final Color tertiaryColor,
             final String flight
     ) {
         this.breed = breed;
-        this.gender = gender.equals("0") ? "M" : "F";
+        this.gender = gender == 0 ? "M" : "F";
         this.primaryGene = primaryGene;
         this.secondaryGene = secondaryGene;
         this.tertiaryGene = tertiaryGene;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.tertiaryColor = tertiaryColor;
-        this.eyeType = eyeType;
         this.flight = flight;
     }
 
@@ -57,7 +71,7 @@ public class Goal {
         return id;
     }
 
-    public String getBreed() {
+    public Breed getBreed() {
         return breed;
     }
 
@@ -65,32 +79,28 @@ public class Goal {
         return gender;
     }
 
-    public String getPrimaryGene() {
+    public Gene getPrimaryGene() {
         return primaryGene;
     }
 
-    public String getSecondaryGene() {
+    public Gene getSecondaryGene() {
         return secondaryGene;
     }
 
-    public String getTertiaryGene() {
+    public Gene getTertiaryGene() {
         return tertiaryGene;
     }
 
-    public String getPrimaryColor() {
+    public Color getPrimaryColor() {
         return primaryColor;
     }
 
-    public String getSecondaryColor() {
+    public Color getSecondaryColor() {
         return secondaryColor;
     }
 
-    public String getTertiaryColor() {
+    public Color getTertiaryColor() {
         return tertiaryColor;
-    }
-
-    public String getEyeType() {
-        return eyeType;
     }
 
     public String getFlight() {

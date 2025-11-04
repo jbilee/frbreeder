@@ -69,6 +69,10 @@ public class Breed {
         return this.type.equals(type);
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Rarity getRarity() {
         return rarity;
     }

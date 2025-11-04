@@ -58,6 +58,10 @@ public class Color {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Integer getGradientOrder() {
         return gradientOrder;
     }

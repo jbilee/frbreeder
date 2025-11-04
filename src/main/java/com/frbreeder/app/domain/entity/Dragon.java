@@ -49,7 +49,7 @@ public class Dragon {
     public Dragon(
             final String name,
             final Breed breed,
-            final String gender,
+            final int gender,
             final Gene primaryGene,
             final Gene secondaryGene,
             final Gene tertiaryGene,
@@ -60,7 +60,7 @@ public class Dragon {
     ) {
         this.name = name;
         this.breed = breed;
-        this.gender = gender.equals("0") ? "M" : "F";
+        this.gender = gender == 0 ? "M" : "F";
         this.primaryGene = primaryGene;
         this.secondaryGene = secondaryGene;
         this.tertiaryGene = tertiaryGene;

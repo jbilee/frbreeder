@@ -37,24 +37,25 @@ public class DragonService {
     private Dragon parseScryUrl(final String name, final String url) {
         String queryParams = url.substring(url.indexOf("?") + 1);
         String[] queryPairs = queryParams.split("&");
-        Map<String, String> queries = new HashMap<>();
+        Map<String, Integer> queries = new HashMap<>();
 
         for (final String pair : queryPairs) {
             String[] keyValue = pair.split("=");
-            queries.put(keyValue[0], keyValue[1]);
+            int value = Integer.parseInt(keyValue[1]);
+            queries.put(keyValue[0], value);
         }
 
         return new Dragon(
                 name,
-                getBreedFromScry(Integer.parseInt(queries.get("breed"))),
+                getBreedFromScry(queries.get("breed")),
                 queries.get("gender"),
-                getGeneFromScry(Integer.parseInt(queries.get("bodygene"))),
-                getGeneFromScry(Integer.parseInt(queries.get("winggene"))),
-                getGeneFromScry(Integer.parseInt(queries.get("tertgene"))),
+                getGeneFromScry(queries.get("bodygene")),
+                getGeneFromScry(queries.get("winggene")),
+                getGeneFromScry(queries.get("tertgene")),
                 getColorFromScry(queries.get("body")),
                 getColorFromScry(queries.get("wings")),
                 getColorFromScry(queries.get("tert")),
-                queries.get("element")
+                queries.get("element").toString()
         );
     }
 
@@ -68,8 +69,8 @@ public class DragonService {
                 .orElseThrow();
     }
 
-    private Color getColorFromScry(final String colorId) {
-        FrColor frColor = FrColor.findByFrId(Integer.parseInt(colorId));
+    private Color getColorFromScry(final int colorId) {
+        FrColor frColor = FrColor.findByFrId(colorId);
         return new Color(frColor.getFrId(), frColor.getName(), frColor.getGradientOrder());
     }
 

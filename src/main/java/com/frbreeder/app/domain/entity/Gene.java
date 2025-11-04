@@ -18,6 +18,7 @@ public class Gene {
     private Integer id;
 
     private String name;
+    private String type;
     private String part;
 
     @Enumerated(value = EnumType.STRING)
@@ -26,14 +27,16 @@ public class Gene {
     protected Gene() {
     }
 
-    public Gene(final Integer id, final String name, final String part, final Rarity rarity) {
+    public Gene(final Integer id, final String name, final String type, final String part, final Rarity rarity) {
         validateId(id);
         validateName(name);
+        validateType(type);
         validatePart(part);
         validateRarity(rarity);
 
         this.id = id;
         this.name = name;
+        this.type = type;
         this.part = part;
         this.rarity = rarity;
     }
@@ -53,6 +56,12 @@ public class Gene {
         }
     }
 
+    private void validateType(final String type) {
+        if (type.isBlank()) {
+            throw new IllegalArgumentException("Type can't be blank.");
+        }
+    }
+
     private void validatePart(final String part) {
         if (part.isBlank()) {
             throw new IllegalArgumentException("Part can't be blank.");
@@ -67,6 +76,10 @@ public class Gene {
 
     public String getName() {
         return name;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String getPart() {

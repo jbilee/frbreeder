@@ -1,9 +1,12 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Color;
 import com.frbreeder.app.domain.entity.Dragon;
+import com.frbreeder.app.domain.entity.Gene;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.ui.dto.BreedingResult;
+import com.frbreeder.app.ui.dto.GeneProbability;
 import com.frbreeder.app.ui.dto.PossibleColors;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -33,17 +36,31 @@ public class BreedingService {
 
         // TODO: Validate lineage
 
-        // TODO: Calculate breed probability
-        // TODO: Calculate gene probabilities
         return new BreedingResult(
-                List.of(),
-                List.of(),
+                calculateBreedProbability(parentA.getBreed(), parentB.getBreed()),
+                calculateGeneProbability(parentA.getPrimaryGene(), parentB.getPrimaryGene()),
                 getColorRange(parentA.getPrimaryColor(), parentB.getPrimaryColor()),
-                List.of(),
+                calculateGeneProbability(parentA.getSecondaryGene(), parentB.getSecondaryGene()),
                 getColorRange(parentA.getSecondaryColor(), parentB.getSecondaryColor()),
-                List.of(),
+                calculateGeneProbability(parentA.getTertiaryGene(), parentB.getTertiaryGene()),
                 getColorRange(parentA.getTertiaryColor(), parentB.getTertiaryColor())
         );
+    }
+
+    private List<GeneProbability> calculateBreedProbability(final Breed a, final Breed b) {
+        Rarity rarityA = a.getRarity();
+        Rarity rarityB = b.getRarity();
+        int weightA = rarityA.findWeight(rarityB);
+        int weightB = rarityB.findWeight(rarityA);
+        return List.of(new GeneProbability(a.getName(), weightA), new GeneProbability(b.getName(), weightB));
+    }
+
+    private List<GeneProbability> calculateGeneProbability(final Gene a, final Gene b) {
+        Rarity rarityA = a.getRarity();
+        Rarity rarityB = b.getRarity();
+        int weightA = rarityA.findWeight(rarityB);
+        int weightB = rarityB.findWeight(rarityA);
+        return List.of(new GeneProbability(a.getName(), weightA), new GeneProbability(b.getName(), weightB));
     }
 
     private PossibleColors getColorRange(final Color a, final Color b) {

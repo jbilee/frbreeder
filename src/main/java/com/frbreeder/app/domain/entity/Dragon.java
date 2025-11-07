@@ -5,6 +5,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
@@ -21,24 +22,31 @@ public class Dragon {
     private String gender;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_gene_id", nullable = false)
     private Gene primaryGene;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secondary_gene_id", nullable = false)
     private Gene secondaryGene;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tertiary_gene_id", nullable = false)
     private Gene tertiaryGene;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "breed_id", nullable = false)
     private Breed breed;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_color_id", nullable = false)
     private Color primaryColor;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secondary_color_id", nullable = false)
     private Color secondaryColor;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tertiary_color_id", nullable = false)
     private Color tertiaryColor;
 
     private String flight;

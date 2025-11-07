@@ -31,3 +31,6 @@ replay_pid*
 
 # Build files
 build
+
+# Properties
+.properties

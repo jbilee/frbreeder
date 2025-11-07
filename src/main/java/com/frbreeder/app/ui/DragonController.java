@@ -1,10 +1,10 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.DragonService;
-import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
+import com.frbreeder.app.ui.dto.RosterDragon;
+import com.frbreeder.app.ui.dto.RosterDragons;
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +24,14 @@ public class DragonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Dragon>> getAll() {
+    public ResponseEntity<RosterDragons> getAll() {
         return ResponseEntity.ok(dragonService.getDragons());
     }
 
     @PostMapping
-    public ResponseEntity<Dragon> addNew(@RequestBody final NewDragonRequest newDragon, final UriComponentsBuilder ucb) {
-        Dragon added = dragonService.addDragon(newDragon.name(), newDragon.scryUrl());
-        URI uri = ucb.path("dragons/{id}").buildAndExpand(added.getId()).toUri();
+    public ResponseEntity<RosterDragon> addNew(@RequestBody final NewDragonRequest newDragon, final UriComponentsBuilder ucb) {
+        RosterDragon added = dragonService.addDragon(newDragon.name(), newDragon.scryUrl());
+        URI uri = ucb.path("dragons/{id}").buildAndExpand(added.id()).toUri();
         return ResponseEntity.created(uri).body(added);
     }
 

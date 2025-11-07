@@ -7,6 +7,8 @@ import com.frbreeder.app.domain.entity.Goal;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.GeneRepository;
 import com.frbreeder.app.infrastructure.GoalRepository;
+import com.frbreeder.app.ui.dto.BreedingGoal;
+import com.frbreeder.app.ui.dto.BreedingGoals;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +27,32 @@ public class GoalService {
         this.geneRepository = geneRepository;
     }
 
-    public List<Goal> getGoals() {
-        return goalRepository.findAll();
+    public BreedingGoals getGoals() {
+        List<Goal> goals = goalRepository.findAll();
+        return new BreedingGoals(
+                goals.stream()
+                        .map(this::getBreedingGoal)
+                        .toList()
+        );
     }
 
-    public Goal addGoal(final String scryUrl) {
+    public BreedingGoal addGoal(final String scryUrl) {
         Goal goal = parseScryUrl(scryUrl);
-        return goalRepository.save(goal);
+        Goal newGoal = goalRepository.save(goal);
+        return getBreedingGoal(newGoal);
+    }
+
+    private BreedingGoal getBreedingGoal(final Goal goal) {
+        return new BreedingGoal(
+                goal.getId(),
+                goal.getBreed().getName(),
+                goal.getPrimaryGene().getName(),
+                goal.getSecondaryGene().getName(),
+                goal.getTertiaryGene().getName(),
+                goal.getPrimaryColor().getName(),
+                goal.getSecondaryColor().getName(),
+                goal.getTertiaryColor().getName()
+        );
     }
 
     private Goal parseScryUrl(final String url) {

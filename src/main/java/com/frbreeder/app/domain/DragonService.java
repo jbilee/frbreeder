@@ -7,6 +7,8 @@ import com.frbreeder.app.domain.entity.Gene;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.infrastructure.GeneRepository;
+import com.frbreeder.app.ui.dto.RosterDragon;
+import com.frbreeder.app.ui.dto.RosterDragons;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +27,34 @@ public class DragonService {
         this.geneRepository = geneRepository;
     }
 
-    public List<Dragon> getDragons() {
-        return dragonRepository.findAll();
+    public RosterDragons getDragons() {
+        List<Dragon> dragons = dragonRepository.findAll();
+        return new RosterDragons(
+                dragons.stream()
+                        .map(this::getRosterDragon)
+                        .toList()
+        );
     }
 
-    public Dragon addDragon(final String name, final String scryUrl) {
+    public RosterDragon addDragon(final String name, final String scryUrl) {
         Dragon dragon = parseScryUrl(name, scryUrl);
-        return dragonRepository.save(dragon);
+        Dragon newDragon = dragonRepository.save(dragon);
+        return getRosterDragon(newDragon);
+    }
+
+    private RosterDragon getRosterDragon(final Dragon dragon) {
+        return new RosterDragon(
+                dragon.getId(),
+                dragon.getName(),
+                dragon.getBreed().getName(),
+                dragon.getGender(),
+                dragon.getPrimaryGene().getName(),
+                dragon.getSecondaryGene().getName(),
+                dragon.getTertiaryGene().getName(),
+                dragon.getPrimaryColor().getName(),
+                dragon.getSecondaryColor().getName(),
+                dragon.getTertiaryColor().getName()
+        );
     }
 
     private Dragon parseScryUrl(final String name, final String url) {

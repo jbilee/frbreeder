@@ -1,10 +1,10 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.GoalService;
-import com.frbreeder.app.domain.entity.Goal;
+import com.frbreeder.app.ui.dto.BreedingGoal;
+import com.frbreeder.app.ui.dto.BreedingGoals;
 import com.frbreeder.app.ui.dto.NewGoalRequest;
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +24,14 @@ public class GoalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Goal>> getAll() {
+    public ResponseEntity<BreedingGoals> getAll() {
         return ResponseEntity.ok(goalService.getGoals());
     }
 
     @PostMapping
-    public ResponseEntity<Goal> addNew(@RequestBody final NewGoalRequest newGoal, final UriComponentsBuilder ucb) {
-        Goal added = goalService.addGoal(newGoal.scryUrl());
-        URI uri = ucb.path("goals/{id}").buildAndExpand(added.getId()).toUri();
+    public ResponseEntity<BreedingGoal> addNew(@RequestBody final NewGoalRequest newGoal, final UriComponentsBuilder ucb) {
+        BreedingGoal added = goalService.addGoal(newGoal.scryUrl());
+        URI uri = ucb.path("goals/{id}").buildAndExpand(added.id()).toUri();
         return ResponseEntity.created(uri).body(added);
     }
 

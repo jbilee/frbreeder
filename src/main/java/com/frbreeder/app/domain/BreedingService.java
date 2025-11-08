@@ -1,5 +1,7 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.domain.common.FrColor;
+import com.frbreeder.app.domain.common.Rarity;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.domain.entity.Gene;

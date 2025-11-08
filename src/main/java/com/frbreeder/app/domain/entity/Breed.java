@@ -1,6 +1,6 @@
 package com.frbreeder.app.domain.entity;
 
-import com.frbreeder.app.domain.Rarity;
+import com.frbreeder.app.domain.common.Rarity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

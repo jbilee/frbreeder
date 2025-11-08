@@ -1,4 +1,4 @@
-package com.frbreeder.app.domain;
+package com.frbreeder.app.domain.common;
 
 import java.util.Map;
 

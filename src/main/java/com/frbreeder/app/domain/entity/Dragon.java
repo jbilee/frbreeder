@@ -37,18 +37,9 @@ public class Dragon {
     @JoinColumn(name = "breed_id", nullable = false)
     private Breed breed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "primary_color_id", nullable = false)
-    private Color primaryColor;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "secondary_color_id", nullable = false)
-    private Color secondaryColor;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tertiary_color_id", nullable = false)
-    private Color tertiaryColor;
-
+    private Integer primaryColorId;
+    private Integer secondaryColorId;
+    private Integer tertiaryColorId;
     private String flight;
 
     protected Dragon() {
@@ -61,9 +52,9 @@ public class Dragon {
             final Gene primaryGene,
             final Gene secondaryGene,
             final Gene tertiaryGene,
-            final Color primaryColor,
-            final Color secondaryColor,
-            final Color tertiaryColor,
+            final int primaryColorId,
+            final int secondaryColorId,
+            final int tertiaryColorId,
             final String flight
     ) {
         this.name = name;
@@ -72,9 +63,9 @@ public class Dragon {
         this.primaryGene = primaryGene;
         this.secondaryGene = secondaryGene;
         this.tertiaryGene = tertiaryGene;
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
-        this.tertiaryColor = tertiaryColor;
+        this.primaryColorId = primaryColorId;
+        this.secondaryColorId = secondaryColorId;
+        this.tertiaryColorId = tertiaryColorId;
         this.flight = flight;
     }
 
@@ -106,16 +97,16 @@ public class Dragon {
         return tertiaryGene;
     }
 
-    public Color getPrimaryColor() {
-        return primaryColor;
+    public int getPrimaryColorId() {
+        return primaryColorId;
     }
 
-    public Color getSecondaryColor() {
-        return secondaryColor;
+    public int getSecondaryColorId() {
+        return secondaryColorId;
     }
 
-    public Color getTertiaryColor() {
-        return tertiaryColor;
+    public int getTertiaryColorId() {
+        return tertiaryColorId;
     }
 
     public String getFlight() {

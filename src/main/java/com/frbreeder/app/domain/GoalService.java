@@ -1,7 +1,6 @@
 package com.frbreeder.app.domain;
 
 import com.frbreeder.app.domain.entity.Breed;
-import com.frbreeder.app.domain.entity.Color;
 import com.frbreeder.app.domain.entity.Gene;
 import com.frbreeder.app.domain.entity.Goal;
 import com.frbreeder.app.infrastructure.BreedRepository;
@@ -49,9 +48,9 @@ public class GoalService {
                 goal.getPrimaryGene().getName(),
                 goal.getSecondaryGene().getName(),
                 goal.getTertiaryGene().getName(),
-                goal.getPrimaryColor().getName(),
-                goal.getSecondaryColor().getName(),
-                goal.getTertiaryColor().getName()
+                FrColor.findByFrId(goal.getPrimaryColorId()).getName(),
+                FrColor.findByFrId(goal.getSecondaryColorId()).getName(),
+                FrColor.findByFrId(goal.getTertiaryColorId()).getName()
         );
     }
 
@@ -72,9 +71,9 @@ public class GoalService {
                 getGeneFromScry(queries.get("bodygene")),
                 getGeneFromScry(queries.get("winggene")),
                 getGeneFromScry(queries.get("tertgene")),
-                getColorFromScry(queries.get("body")),
-                getColorFromScry(queries.get("wings")),
-                getColorFromScry(queries.get("tert")),
+                queries.get("body"),
+                queries.get("wings"),
+                queries.get("tert"),
                 queries.get("element").toString()
         );
     }
@@ -87,11 +86,6 @@ public class GoalService {
     private Gene getGeneFromScry(final int geneId) {
         return geneRepository.findById(geneId)
                 .orElseThrow();
-    }
-
-    private Color getColorFromScry(final int colorId) {
-        FrColor frColor = FrColor.findByFrId(colorId);
-        return new Color(frColor.getFrId(), frColor.getName(), frColor.getGradientOrder());
     }
 
 }

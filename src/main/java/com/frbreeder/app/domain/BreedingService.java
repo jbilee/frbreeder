@@ -1,7 +1,6 @@
 package com.frbreeder.app.domain;
 
 import com.frbreeder.app.domain.entity.Breed;
-import com.frbreeder.app.domain.entity.Color;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.domain.entity.Gene;
 import com.frbreeder.app.infrastructure.DragonRepository;
@@ -39,11 +38,11 @@ public class BreedingService {
         return new BreedingResult(
                 calculateBreedProbability(parentA.getBreed(), parentB.getBreed()),
                 calculateGeneProbability(parentA.getPrimaryGene(), parentB.getPrimaryGene()),
-                getColorRange(parentA.getPrimaryColor(), parentB.getPrimaryColor()),
+                getColorRange(parentA.getPrimaryColorId(), parentB.getPrimaryColorId()),
                 calculateGeneProbability(parentA.getSecondaryGene(), parentB.getSecondaryGene()),
-                getColorRange(parentA.getSecondaryColor(), parentB.getSecondaryColor()),
+                getColorRange(parentA.getSecondaryColorId(), parentB.getSecondaryColorId()),
                 calculateGeneProbability(parentA.getTertiaryGene(), parentB.getTertiaryGene()),
-                getColorRange(parentA.getTertiaryColor(), parentB.getTertiaryColor())
+                getColorRange(parentA.getTertiaryColorId(), parentB.getTertiaryColorId())
         );
     }
 
@@ -63,19 +62,16 @@ public class BreedingService {
         return List.of(new GeneProbability(a.getName(), weightA), new GeneProbability(b.getName(), weightB));
     }
 
-    private PossibleColors getColorRange(final Color a, final Color b) {
-        int aGradientOrder = a.getGradientOrder();
-        int bGradientOrder = b.getGradientOrder();
-
-        if (aGradientOrder == bGradientOrder) {
-            FrColor frColor = FrColor.findByFrId(a.getId());
-            return new PossibleColors(List.of(frColor.getName()));
+    private PossibleColors getColorRange(final int aId, final int bId) {
+        if (aId == bId) {
+            return new PossibleColors(List.of(FrColor.findByFrId(aId).getName()));
         }
 
+        int aGradientOrder = FrColor.findByFrId(aId).getGradientOrder();
+        int bGradientOrder = FrColor.findByFrId(bId).getGradientOrder();
+
         int distance = getDistance(aGradientOrder, bGradientOrder);
-        System.out.println(distance);
         int wrapDistance = getWrapDistance(distance);
-        System.out.println(wrapDistance);
 
         if (distance == wrapDistance) {
             // TODO: Replace with appropriate exception

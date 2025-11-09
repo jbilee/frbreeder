@@ -16,13 +16,15 @@ public class Workspace {
 
     private String name;
     private String password;
+    private String secret;
 
     protected Workspace() {
     }
 
-    public Workspace(final String name, final String password) {
+    public Workspace(final String name, final String password, final String secret) {
         this.name = name;
         this.password = password;
+        this.secret = secret;
     }
 
     public Long getId() {
@@ -35,6 +37,10 @@ public class Workspace {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getSecret() {
+        return secret;
     }
 
 }

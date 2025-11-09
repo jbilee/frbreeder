@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
@@ -42,6 +43,10 @@ public class Dragon {
     private Integer tertiaryColorId;
     private String flight;
 
+    @ManyToMany
+    @JoinColumn(name = "workspace_id", nullable = false)
+    private Workspace workspace;
+
     protected Dragon() {
     }
 
@@ -55,7 +60,8 @@ public class Dragon {
             final int primaryColorId,
             final int secondaryColorId,
             final int tertiaryColorId,
-            final String flight
+            final String flight,
+            final Workspace workspace
     ) {
         this.name = name;
         this.breed = breed;
@@ -67,6 +73,7 @@ public class Dragon {
         this.secondaryColorId = secondaryColorId;
         this.tertiaryColorId = tertiaryColorId;
         this.flight = flight;
+        this.workspace = workspace;
     }
 
     public long getId() {

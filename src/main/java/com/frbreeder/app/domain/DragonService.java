@@ -78,7 +78,8 @@ public class DragonService {
                 queries.get("body"),
                 queries.get("wings"),
                 queries.get("tert"),
-                queries.get("element").toString()
+                queries.get("element").toString(),
+                null
         );
     }
 

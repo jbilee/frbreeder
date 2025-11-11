@@ -26,15 +26,15 @@ public class Goal {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_gene_id", nullable = false)
-    private Gene primaryGene;
+    private PrimaryGene primaryGene;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "secondary_gene_id", nullable = false)
-    private Gene secondaryGene;
+    private SecondaryGene secondaryGene;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tertiary_gene_id", nullable = false)
-    private Gene tertiaryGene;
+    private TertiaryGene tertiaryGene;
 
     private Integer primaryColorId;
     private Integer secondaryColorId;
@@ -47,9 +47,9 @@ public class Goal {
     public Goal(
             final Breed breed,
             final int gender,
-            final Gene primaryGene,
-            final Gene secondaryGene,
-            final Gene tertiaryGene,
+            final PrimaryGene primaryGene,
+            final SecondaryGene secondaryGene,
+            final TertiaryGene tertiaryGene,
             final int primaryColorId,
             final int secondaryColorId,
             final int tertiaryColorId,
@@ -78,15 +78,15 @@ public class Goal {
         return gender;
     }
 
-    public Gene getPrimaryGene() {
+    public PrimaryGene getPrimaryGene() {
         return primaryGene;
     }
 
-    public Gene getSecondaryGene() {
+    public SecondaryGene getSecondaryGene() {
         return secondaryGene;
     }
 
-    public Gene getTertiaryGene() {
+    public TertiaryGene getTertiaryGene() {
         return tertiaryGene;
     }
 

@@ -3,11 +3,15 @@ package com.frbreeder.app.domain;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Dragon;
-import com.frbreeder.app.domain.entity.Gene;
+import com.frbreeder.app.domain.entity.PrimaryGene;
+import com.frbreeder.app.domain.entity.SecondaryGene;
+import com.frbreeder.app.domain.entity.TertiaryGene;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
-import com.frbreeder.app.infrastructure.GeneRepository;
+import com.frbreeder.app.infrastructure.PrimaryGeneRepository;
+import com.frbreeder.app.infrastructure.SecondaryGeneRepository;
+import com.frbreeder.app.infrastructure.TertiaryGeneRepository;
 import com.frbreeder.app.ui.dto.RosterDragon;
 import com.frbreeder.app.ui.dto.RosterDragons;
 import java.util.HashMap;
@@ -20,12 +24,16 @@ public class DragonService {
 
     private final DragonRepository dragonRepository;
     private final BreedRepository breedRepository;
-    private final GeneRepository geneRepository;
+    private final PrimaryGeneRepository primaryGeneRepository;
+    private final SecondaryGeneRepository secondaryGeneRepository;
+    private final TertiaryGeneRepository tertiaryGeneRepository;
 
-    public DragonService(final DragonRepository dragonRepository, final BreedRepository breedRepository, final GeneRepository geneRepository) {
+    public DragonService(final DragonRepository dragonRepository, final BreedRepository breedRepository, final PrimaryGeneRepository primaryGeneRepository, final SecondaryGeneRepository secondaryGeneRepository, final TertiaryGeneRepository tertiaryGeneRepository) {
         this.dragonRepository = dragonRepository;
         this.breedRepository = breedRepository;
-        this.geneRepository = geneRepository;
+        this.primaryGeneRepository = primaryGeneRepository;
+        this.secondaryGeneRepository = secondaryGeneRepository;
+        this.tertiaryGeneRepository = tertiaryGeneRepository;
     }
 
     public RosterDragons getDragons() {
@@ -73,9 +81,9 @@ public class DragonService {
                 name,
                 getBreedFromScry(queries.get("breed")),
                 queries.get("gender"),
-                getGeneFromScry(queries.get("bodygene")),
-                getGeneFromScry(queries.get("winggene")),
-                getGeneFromScry(queries.get("tertgene")),
+                getPrimaryGeneFromScry(queries.get("bodygene")),
+                getSecondaryGeneFromScry(queries.get("winggene")),
+                getTertiaryGeneFromScry(queries.get("tertgene")),
                 queries.get("body"),
                 queries.get("wings"),
                 queries.get("tert"),
@@ -89,8 +97,18 @@ public class DragonService {
                 .orElseThrow();
     }
 
-    private Gene getGeneFromScry(final int geneId) {
-        return geneRepository.findById(geneId)
+    private PrimaryGene getPrimaryGeneFromScry(final int geneId) {
+        return primaryGeneRepository.findById(geneId)
+                .orElseThrow();
+    }
+
+    private SecondaryGene getSecondaryGeneFromScry(final int geneId) {
+        return secondaryGeneRepository.findById(geneId)
+                .orElseThrow();
+    }
+
+    private TertiaryGene getTertiaryGeneFromScry(final int geneId) {
+        return tertiaryGeneRepository.findById(geneId)
                 .orElseThrow();
     }
 

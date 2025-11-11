@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
@@ -43,7 +42,7 @@ public class Dragon {
     private Integer tertiaryColorId;
     private String flight;
 
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
 
@@ -118,6 +117,10 @@ public class Dragon {
 
     public String getFlight() {
         return flight;
+    }
+
+    public Workspace getWorkspace() {
+        return workspace;
     }
 
     @Override

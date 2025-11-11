@@ -1,6 +1,7 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.DragonService;
+import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
 import com.frbreeder.app.ui.dto.RosterDragon;
 import com.frbreeder.app.ui.dto.RosterDragons;
@@ -29,8 +30,8 @@ public class DragonController {
     }
 
     @PostMapping
-    public ResponseEntity<RosterDragon> addNew(@RequestBody final NewDragonRequest newDragon, final UriComponentsBuilder ucb) {
-        RosterDragon added = dragonService.addDragon(newDragon.name(), newDragon.scryUrl());
+    public ResponseEntity<RosterDragon> addNew(@RequestBody final NewDragonRequest newDragon, final Workspace workspace, final UriComponentsBuilder ucb) {
+        RosterDragon added = dragonService.addDragon(workspace, newDragon.name(), newDragon.scryUrl());
         URI uri = ucb.path("dragons/{id}").buildAndExpand(added.id()).toUri();
         return ResponseEntity.created(uri).body(added);
     }

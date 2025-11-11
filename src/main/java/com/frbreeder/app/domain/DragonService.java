@@ -4,6 +4,7 @@ import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.domain.entity.Gene;
+import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.infrastructure.GeneRepository;
@@ -36,8 +37,8 @@ public class DragonService {
         );
     }
 
-    public RosterDragon addDragon(final String name, final String scryUrl) {
-        Dragon dragon = parseScryUrl(name, scryUrl);
+    public RosterDragon addDragon(final Workspace workspace, final String name, final String scryUrl) {
+        Dragon dragon = parseScryUrl(name, scryUrl, workspace);
         Dragon newDragon = dragonRepository.save(dragon);
         return getRosterDragon(newDragon);
     }
@@ -57,7 +58,7 @@ public class DragonService {
         );
     }
 
-    private Dragon parseScryUrl(final String name, final String url) {
+    private Dragon parseScryUrl(final String name, final String url, final Workspace workspace) {
         String queryParams = url.substring(url.indexOf("?") + 1);
         String[] queryPairs = queryParams.split("&");
         Map<String, Integer> queries = new HashMap<>();
@@ -79,7 +80,7 @@ public class DragonService {
                 queries.get("wings"),
                 queries.get("tert"),
                 queries.get("element").toString(),
-                null
+                workspace
         );
     }
 

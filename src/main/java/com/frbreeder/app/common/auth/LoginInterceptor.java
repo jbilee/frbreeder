@@ -1,6 +1,7 @@
 package com.frbreeder.app.common.auth;
 
 import com.frbreeder.app.domain.WorkspaceService;
+import com.frbreeder.app.domain.entity.Workspace;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,10 +26,11 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         Long workspaceId = jwtTokenProvider.getWorkspaceIdFromToken(token);
-        workspaceService.findWorkspaceById(workspaceId);
+        Workspace workspace = workspaceService.findWorkspaceById(workspaceId);
+
+        request.setAttribute("workspace", workspace);
 
         return true;
     }
 
 }
-

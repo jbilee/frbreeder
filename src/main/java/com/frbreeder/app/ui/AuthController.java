@@ -1,6 +1,8 @@
 package com.frbreeder.app.ui;
 
+import com.frbreeder.app.common.auth.AuthStatusResponse;
 import com.frbreeder.app.domain.WorkspaceService;
+import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.NewWorkspaceRequest;
 import com.frbreeder.app.ui.dto.TokenResponse;
 import com.frbreeder.app.ui.dto.WorkspaceLoginRequest;
@@ -8,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -51,6 +54,11 @@ public class AuthController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/auth")
+    public ResponseEntity<AuthStatusResponse> checkAuthStatus(final Workspace workspace) {
+        return ResponseEntity.ok(new AuthStatusResponse("OK", workspace.getName()));
     }
 
 }

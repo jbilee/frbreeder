@@ -8,6 +8,7 @@ import com.frbreeder.app.ui.dto.TokenResponse;
 import com.frbreeder.app.ui.dto.WorkspaceLoginRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +28,13 @@ public class AuthController {
     public ResponseEntity<Void> registerWorkspace(@RequestBody final NewWorkspaceRequest request, final HttpServletResponse response) {
         TokenResponse tokenResponse = workspaceService.register(request);
 
-        Cookie cookie = new Cookie("token", tokenResponse.accessToken());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("token", tokenResponse.accessToken())
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.ok().build();
     }
@@ -39,10 +43,13 @@ public class AuthController {
     public ResponseEntity<Void> loginToWorkspace(@RequestBody final WorkspaceLoginRequest request, final HttpServletResponse response) {
         TokenResponse tokenResponse = workspaceService.login(request);
 
-        Cookie cookie = new Cookie("token", tokenResponse.accessToken());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("token", tokenResponse.accessToken())
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.ok().build();
     }

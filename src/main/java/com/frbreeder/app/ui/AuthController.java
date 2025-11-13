@@ -6,7 +6,6 @@ import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.NewWorkspaceRequest;
 import com.frbreeder.app.ui.dto.TokenResponse;
 import com.frbreeder.app.ui.dto.WorkspaceLoginRequest;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +55,14 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logoutFromWorkspace(final HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("token", null)
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.ok().build();
     }

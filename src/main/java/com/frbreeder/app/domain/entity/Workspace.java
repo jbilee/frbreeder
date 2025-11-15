@@ -69,4 +69,8 @@ public class Workspace {
         return name;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
 }

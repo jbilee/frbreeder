@@ -3,6 +3,8 @@ package com.frbreeder.app.ui;
 import com.frbreeder.app.common.auth.AuthStatusResponse;
 import com.frbreeder.app.domain.WorkspaceService;
 import com.frbreeder.app.domain.entity.Workspace;
+import com.frbreeder.app.ui.dto.NewWorkspace;
+import com.frbreeder.app.ui.dto.NewWorkspaceDetails;
 import com.frbreeder.app.ui.dto.NewWorkspaceRequest;
 import com.frbreeder.app.ui.dto.TokenResponse;
 import com.frbreeder.app.ui.dto.WorkspaceLoginRequest;
@@ -24,10 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerWorkspace(@RequestBody final NewWorkspaceRequest request, final HttpServletResponse response) {
-        TokenResponse tokenResponse = workspaceService.register(request);
+    public ResponseEntity<NewWorkspaceDetails> registerWorkspace(@RequestBody final NewWorkspaceRequest request, final HttpServletResponse response) {
+        NewWorkspace newWorkspace = workspaceService.register(request);
 
-        ResponseCookie cookie = ResponseCookie.from("token", tokenResponse.accessToken())
+        ResponseCookie cookie = ResponseCookie.from("token", newWorkspace.token())
                 .path("/")
                 .httpOnly(true)
                 .secure(true)
@@ -35,7 +37,7 @@ public class AuthController {
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new NewWorkspaceDetails(newWorkspace.name(), newWorkspace.secret()));
     }
 
     @PostMapping("/login")

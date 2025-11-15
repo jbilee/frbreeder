@@ -8,7 +8,9 @@ import com.frbreeder.app.ui.dto.RosterDragons;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,12 @@ public class DragonController {
     @GetMapping
     public ResponseEntity<RosterDragons> getAll(final Workspace workspace) {
         return ResponseEntity.ok(dragonService.getDragons(workspace.getId()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOne(@PathVariable("id") final Long id, final Workspace workspace) {
+        dragonService.deleteDragon(id, workspace.getId());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping

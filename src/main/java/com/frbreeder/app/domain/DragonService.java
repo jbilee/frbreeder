@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.common.error.InvalidRequestException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Dragon;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DragonService {
@@ -110,6 +112,14 @@ public class DragonService {
     private TertiaryGene getTertiaryGeneFromScry(final int geneId) {
         return tertiaryGeneRepository.findById(geneId)
                 .orElseThrow();
+    }
+
+    @Transactional
+    public void deleteDragon(final Long id, final Long workspaceId) {
+        Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
+                .orElseThrow(() -> new InvalidRequestException("The dragon by that id does not exist."));
+
+        dragonRepository.deleteById(dragon.getId());
     }
 
 }

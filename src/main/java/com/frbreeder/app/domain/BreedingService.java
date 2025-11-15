@@ -49,6 +49,10 @@ public class BreedingService {
     }
 
     private List<GeneProbability> calculateBreedProbability(final Breed a, final Breed b) {
+        if (a.getName().equals(b.getName())) {
+            return List.of(new GeneProbability(a.getName(), 100));
+        }
+
         Rarity rarityA = a.getRarity();
         Rarity rarityB = b.getRarity();
         int weightA = rarityA.findWeight(rarityB);
@@ -57,6 +61,10 @@ public class BreedingService {
     }
 
     private List<GeneProbability> calculateGeneProbability(final Gene a, final Gene b) {
+        if (a.isSameGene(b)) {
+            return List.of(new GeneProbability(a.getName(), 100));
+        }
+
         Rarity rarityA = a.getRarity();
         Rarity rarityB = b.getRarity();
         int weightA = rarityA.findWeight(rarityB);

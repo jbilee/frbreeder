@@ -26,35 +26,24 @@ public class SecondaryGene implements Gene {
     protected SecondaryGene() {
     }
 
-    public SecondaryGene(final Integer id, final String name, final String type, final Rarity rarity) {
-        validateId(id);
+    public SecondaryGene(final String name, final String type, final Rarity rarity) {
         validateName(name);
         validateType(type);
         validateRarity(rarity);
 
-        this.id = id;
         this.name = name;
         this.type = type;
         this.rarity = rarity;
     }
 
-    private void validateId(final Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id must be present.");
-        }
-        if (id < 1) {
-            throw new IllegalArgumentException("Id must be 1 and higher.");
-        }
-    }
-
     private void validateName(final String name) {
-        if (name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name can't be blank.");
         }
     }
 
     private void validateType(final String type) {
-        if (type.isBlank()) {
+        if (type == null || type.isBlank()) {
             throw new IllegalArgumentException("Type can't be blank.");
         }
     }

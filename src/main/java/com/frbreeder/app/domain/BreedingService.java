@@ -49,7 +49,10 @@ public class BreedingService {
     }
 
     private List<GeneProbability> calculateBreedProbability(final Breed a, final Breed b) {
-        if (a.getName().equals(b.getName())) {
+        String aName = a.getName();
+        String bName = b.getName();
+
+        if (aName.equals(bName)) {
             return List.of(new GeneProbability(a.getName(), 100));
         }
 
@@ -61,7 +64,10 @@ public class BreedingService {
     }
 
     private List<GeneProbability> calculateGeneProbability(final Gene a, final Gene b) {
-        if (a.isSameGene(b)) {
+        String aName = a.getName();
+        String bName = b.getName();
+
+        if (aName.equals(bName)) {
             return List.of(new GeneProbability(a.getName(), 100));
         }
 

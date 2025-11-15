@@ -8,8 +8,4 @@ public interface Gene {
 
     Rarity getRarity();
 
-    default boolean isSameGene(final Gene other) {
-        return getName().equals(other.getName());
-    }
-
 }

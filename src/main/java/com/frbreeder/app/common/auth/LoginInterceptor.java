@@ -20,6 +20,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+
         String token = authorizationExtractor.extract(request);
         if (token == null || token.isBlank()) {
             throw new RuntimeException("Need to log in.");

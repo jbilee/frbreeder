@@ -36,8 +36,8 @@ public class DragonService {
         this.tertiaryGeneRepository = tertiaryGeneRepository;
     }
 
-    public RosterDragons getDragons() {
-        List<Dragon> dragons = dragonRepository.findAll();
+    public RosterDragons getDragons(final Long workspaceId) {
+        List<Dragon> dragons = dragonRepository.findAllByWorkspaceId(workspaceId);
         return new RosterDragons(
                 dragons.stream()
                         .map(this::getRosterDragon)

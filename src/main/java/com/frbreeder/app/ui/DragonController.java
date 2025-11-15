@@ -25,8 +25,8 @@ public class DragonController {
     }
 
     @GetMapping
-    public ResponseEntity<RosterDragons> getAll() {
-        return ResponseEntity.ok(dragonService.getDragons());
+    public ResponseEntity<RosterDragons> getAll(final Workspace workspace) {
+        return ResponseEntity.ok(dragonService.getDragons(workspace.getId()));
     }
 
     @PostMapping

@@ -1,4 +1,6 @@
 package com.frbreeder.app.ui.dto;
 
-public record NewDragonRequest(String name, String scryUrl) {
+import java.util.List;
+
+public record NewDragonRequest(List<NewDragon> dragons) {
 }

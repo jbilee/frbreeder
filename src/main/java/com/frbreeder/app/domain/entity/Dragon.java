@@ -18,6 +18,7 @@ public class Dragon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long frId;
     private String name;
     private String gender;
 
@@ -50,6 +51,7 @@ public class Dragon {
     }
 
     public Dragon(
+            final Long frId,
             final String name,
             final Breed breed,
             final int gender,
@@ -62,6 +64,7 @@ public class Dragon {
             final String flight,
             final Workspace workspace
     ) {
+        this.frId = frId;
         this.name = name;
         this.breed = breed;
         this.gender = gender == 0 ? "M" : "F";
@@ -77,6 +80,10 @@ public class Dragon {
 
     public long getId() {
         return id;
+    }
+
+    public Long getFrId() {
+        return frId;
     }
 
     public String getName() {

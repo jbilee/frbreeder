@@ -3,9 +3,8 @@ package com.frbreeder.app.ui;
 import com.frbreeder.app.domain.DragonService;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
-import com.frbreeder.app.ui.dto.RosterDragon;
 import com.frbreeder.app.ui.dto.RosterDragons;
-import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,10 +37,9 @@ public class DragonController {
     }
 
     @PostMapping
-    public ResponseEntity<RosterDragon> addNew(@RequestBody final NewDragonRequest newDragon, final Workspace workspace, final UriComponentsBuilder ucb) {
-        RosterDragon added = dragonService.addDragon(workspace, newDragon.name(), newDragon.scryUrl());
-        URI uri = ucb.path("dragons/{id}").buildAndExpand(added.id()).toUri();
-        return ResponseEntity.created(uri).body(added);
+    public ResponseEntity<RosterDragons> addNew(@RequestBody final NewDragonRequest request, final Workspace workspace, final UriComponentsBuilder ucb) {
+        RosterDragons added = dragonService.addDragons(workspace, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(added);
     }
 
 }

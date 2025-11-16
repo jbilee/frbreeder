@@ -13,8 +13,11 @@ import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.infrastructure.PrimaryGeneRepository;
 import com.frbreeder.app.infrastructure.SecondaryGeneRepository;
 import com.frbreeder.app.infrastructure.TertiaryGeneRepository;
+import com.frbreeder.app.ui.dto.NewDragon;
+import com.frbreeder.app.ui.dto.NewDragonRequest;
 import com.frbreeder.app.ui.dto.RosterDragon;
 import com.frbreeder.app.ui.dto.RosterDragons;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +50,15 @@ public class DragonService {
         );
     }
 
-    public RosterDragon addDragon(final Workspace workspace, final String name, final String scryUrl) {
-        Dragon dragon = parseScryUrl(name, scryUrl, workspace);
-        Dragon newDragon = dragonRepository.save(dragon);
-        return getRosterDragon(newDragon);
+    @Transactional
+    public RosterDragons addDragons(final Workspace workspace, final NewDragonRequest request) {
+        List<RosterDragon> rosterDragons = new ArrayList<>();
+        for (NewDragon requestDragon : request.dragons()) {
+            Dragon dragon = parseScryUrl(requestDragon.frId(), requestDragon.name(), requestDragon.scryUrl(), workspace);
+            Dragon newDragon = dragonRepository.save(dragon);
+            rosterDragons.add(getRosterDragon(newDragon));
+        }
+        return new RosterDragons(rosterDragons);
     }
 
     private RosterDragon getRosterDragon(final Dragon dragon) {
@@ -68,7 +76,7 @@ public class DragonService {
         );
     }
 
-    private Dragon parseScryUrl(final String name, final String url, final Workspace workspace) {
+    private Dragon parseScryUrl(final Long frId, final String name, final String url, final Workspace workspace) {
         String queryParams = url.substring(url.indexOf("?") + 1);
         String[] queryPairs = queryParams.split("&");
         Map<String, Integer> queries = new HashMap<>();
@@ -80,6 +88,7 @@ public class DragonService {
         }
 
         return new Dragon(
+                frId,
                 name,
                 getBreedFromScry(queries.get("breed")),
                 queries.get("gender"),

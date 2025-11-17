@@ -9,9 +9,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "dragons")
+@SQLDelete(sql = "UPDATE dragons SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 public class Dragon {
 
     @Id
@@ -52,7 +56,8 @@ public class Dragon {
     }
 
     public Dragon(
-            final Long frId, final String scryUrl,
+            final Long frId,
+            final String scryUrl,
             final String name,
             final Breed breed,
             final int gender,

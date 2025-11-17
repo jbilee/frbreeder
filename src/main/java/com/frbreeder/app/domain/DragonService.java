@@ -15,6 +15,7 @@ import com.frbreeder.app.infrastructure.SecondaryGeneRepository;
 import com.frbreeder.app.infrastructure.TertiaryGeneRepository;
 import com.frbreeder.app.ui.dto.NewDragon;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
+import com.frbreeder.app.ui.dto.RegisteredDragon;
 import com.frbreeder.app.ui.dto.RosterDragon;
 import com.frbreeder.app.ui.dto.RosterDragons;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class DragonService {
         this.tertiaryGeneRepository = tertiaryGeneRepository;
     }
 
+    @Transactional(readOnly = true)
     public RosterDragons getDragons(final Long workspaceId) {
         List<Dragon> dragons = dragonRepository.findAllByWorkspaceId(workspaceId);
         return new RosterDragons(
@@ -89,6 +91,7 @@ public class DragonService {
 
         return new Dragon(
                 frId,
+                url,
                 name,
                 getBreedFromScry(queries.get("breed")),
                 queries.get("gender"),
@@ -121,6 +124,13 @@ public class DragonService {
     private TertiaryGene getTertiaryGeneFromScry(final int geneId) {
         return tertiaryGeneRepository.findById(geneId)
                 .orElseThrow();
+    }
+
+    @Transactional(readOnly = true)
+    public RegisteredDragon getDragon(final Long id, final Long workspaceId) {
+        Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
+                .orElseThrow(() -> new InvalidRequestException("The dragon by that id does not exist."));
+        return new RegisteredDragon(dragon.getScryUrl(), dragon.getName(), id);
     }
 
     @Transactional

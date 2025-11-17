@@ -19,6 +19,7 @@ public class Dragon {
     private Long id;
 
     private Long frId;
+    private String scryUrl;
     private String name;
     private String gender;
 
@@ -51,7 +52,7 @@ public class Dragon {
     }
 
     public Dragon(
-            final Long frId,
+            final Long frId, final String scryUrl,
             final String name,
             final Breed breed,
             final int gender,
@@ -65,6 +66,7 @@ public class Dragon {
             final Workspace workspace
     ) {
         this.frId = frId;
+        this.scryUrl = scryUrl;
         this.name = name;
         this.breed = breed;
         this.gender = gender == 0 ? "M" : "F";
@@ -84,6 +86,10 @@ public class Dragon {
 
     public Long getFrId() {
         return frId;
+    }
+
+    public String getScryUrl() {
+        return scryUrl;
     }
 
     public String getName() {

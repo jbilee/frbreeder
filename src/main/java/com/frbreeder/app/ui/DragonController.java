@@ -3,6 +3,7 @@ package com.frbreeder.app.ui;
 import com.frbreeder.app.domain.DragonService;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
+import com.frbreeder.app.ui.dto.RegisteredDragon;
 import com.frbreeder.app.ui.dto.RosterDragons;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,11 @@ public class DragonController {
     @GetMapping
     public ResponseEntity<RosterDragons> getAll(final Workspace workspace) {
         return ResponseEntity.ok(dragonService.getDragons(workspace.getId()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RegisteredDragon> getOne(@PathVariable("id") final Long id, final Workspace workspace) {
+        return ResponseEntity.ok(dragonService.getDragon(workspace.getId(), id));
     }
 
     @DeleteMapping("/{id}")

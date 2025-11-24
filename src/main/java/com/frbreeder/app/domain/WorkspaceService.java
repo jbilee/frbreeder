@@ -49,8 +49,10 @@ public class WorkspaceService {
         return workspaceRepository.findById(id).orElseThrow();
     }
 
+    @Transactional
     public TokenResponse login(final WorkspaceLoginRequest request) {
         Workspace workspace = workspaceRepository.findByNameAndPassword(request.name(), request.password()).orElseThrow();
+        workspaceRepository.updatedLastLoggedIn(workspace.getId());
         String token = jwtTokenProvider.createToken(workspace);
         return new TokenResponse(token);
     }

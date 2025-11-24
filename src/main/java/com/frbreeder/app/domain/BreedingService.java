@@ -3,12 +3,18 @@ package com.frbreeder.app.domain;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.common.Rarity;
 import com.frbreeder.app.domain.entity.Breed;
+import com.frbreeder.app.domain.entity.BreedingPair;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.domain.entity.Gene;
+import com.frbreeder.app.domain.entity.Workspace;
+import com.frbreeder.app.infrastructure.BreedingPairRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.ui.dto.BreedingResult;
+import com.frbreeder.app.ui.dto.DragonPair;
 import com.frbreeder.app.ui.dto.GeneProbability;
+import com.frbreeder.app.ui.dto.NewPairRequest;
 import com.frbreeder.app.ui.dto.PossibleColors;
+import com.frbreeder.app.ui.dto.RosterDragon;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BreedingService {
 
     private final DragonRepository dragonRepository;
+    private final BreedingPairRepository breedingPairRepository;
 
-    public BreedingService(final DragonRepository dragonRepository) {
+    public BreedingService(final DragonRepository dragonRepository, final BreedingPairRepository breedingPairRepository) {
         this.dragonRepository = dragonRepository;
+        this.breedingPairRepository = breedingPairRepository;
     }
 
     public BreedingResult getResult(final long parentAId, final long parentBId) {
@@ -109,6 +117,37 @@ public class BreedingService {
 
     private int getWrapDistance(final int distance) {
         return FrColor.TOTAL_COLORS - distance;
+    }
+
+    public List<DragonPair> getDragonPairs(final long workspaceId) {
+        return breedingPairRepository.findAllByWorkspaceId(workspaceId).stream()
+                .map(pair -> new DragonPair(pair.getName(), getRosterDragon(pair.getMale()), getRosterDragon(pair.getFemale())))
+                .toList();
+    }
+
+    private RosterDragon getRosterDragon(final Dragon dragon) {
+        return new RosterDragon(
+                dragon.getId(),
+                dragon.getName(),
+                dragon.getBreed().getName(),
+                dragon.getGender(),
+                dragon.getPrimaryGene().getName(),
+                dragon.getSecondaryGene().getName(),
+                dragon.getTertiaryGene().getName(),
+                FrColor.findByFrId(dragon.getPrimaryColorId()).getName(),
+                FrColor.findByFrId(dragon.getSecondaryColorId()).getName(),
+                FrColor.findByFrId(dragon.getTertiaryColorId()).getName()
+        );
+    }
+
+    @Transactional
+    public void addBreedingPair(final NewPairRequest request, final Workspace workspace) {
+        Dragon maleDragon = dragonRepository.findById(request.maleId()).orElseThrow();
+        Dragon femaleDragon = dragonRepository.findById(request.femaleId()).orElseThrow();
+
+        BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
+
+        breedingPairRepository.save(breedingPair);
     }
 
 }

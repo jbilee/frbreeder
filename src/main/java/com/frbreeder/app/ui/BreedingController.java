@@ -1,10 +1,16 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.BreedingService;
+import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.BreedingResult;
+import com.frbreeder.app.ui.dto.DragonPair;
+import com.frbreeder.app.ui.dto.NewPairRequest;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,6 +22,17 @@ public class BreedingController {
 
     public BreedingController(final BreedingService breedingService) {
         this.breedingService = breedingService;
+    }
+
+    @PostMapping("/pairs")
+    ResponseEntity<Void> createPair(@RequestBody final NewPairRequest request, final Workspace workspace) {
+        breedingService.addBreedingPair(request, workspace);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/pairs")
+    ResponseEntity<List<DragonPair>> getAllPairs(final Workspace workspace) {
+        return ResponseEntity.ok(breedingService.getDragonPairs(workspace.getId()));
     }
 
     @GetMapping

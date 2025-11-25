@@ -13,15 +13,16 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "goals")
-@SQLDelete(sql = "UPDATE goals SET deleted_at = NOW() WHERE id = ?")
+@Table(name = "projects")
+@SQLDelete(sql = "UPDATE projects SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-public class Goal {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long frId;
     private String name;
     private String scryUrl;
     private String gender;
@@ -51,11 +52,11 @@ public class Goal {
     @JoinColumn(name = "workspace_id", nullable = false)
     private Workspace workspace;
 
-    protected Goal() {
+    protected Project() {
     }
 
-    public Goal(
-            final String name, final String scryUrl, final Breed breed,
+    public Project(
+            final Long frId, final String name, final String scryUrl, final Breed breed,
             final int gender,
             final PrimaryGene primaryGene,
             final SecondaryGene secondaryGene,
@@ -65,6 +66,7 @@ public class Goal {
             final int tertiaryColorId,
             final String flight, final Workspace workspace
     ) {
+        this.frId = frId;
         this.name = name;
         this.scryUrl = scryUrl;
         this.breed = breed;
@@ -81,6 +83,10 @@ public class Goal {
 
     public long getId() {
         return id;
+    }
+
+    public Long getFrId() {
+        return frId;
     }
 
     public String getName() {
@@ -134,8 +140,8 @@ public class Goal {
     @Override
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        final Goal goal = (Goal) o;
-        return Objects.equals(id, goal.id);
+        final Project project = (Project) o;
+        return Objects.equals(id, project.id);
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.frbreeder.app.ui;
 
-import com.frbreeder.app.domain.GoalService;
+import com.frbreeder.app.domain.ProjectService;
 import com.frbreeder.app.domain.entity.Workspace;
-import com.frbreeder.app.ui.dto.BreedingGoal;
-import com.frbreeder.app.ui.dto.BreedingGoals;
-import com.frbreeder.app.ui.dto.NewGoalRequest;
+import com.frbreeder.app.ui.dto.BreedingProject;
+import com.frbreeder.app.ui.dto.BreedingProjects;
+import com.frbreeder.app.ui.dto.NewProjectRequest;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,30 +17,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
-@RequestMapping("/goals")
-public class GoalController {
+@RequestMapping("/projects")
+public class ProjectController {
 
-    private final GoalService goalService;
+    private final ProjectService projectService;
 
-    public GoalController(final GoalService goalService) {
-        this.goalService = goalService;
+    public ProjectController(final ProjectService projectService) {
+        this.projectService = projectService;
     }
 
     @GetMapping
-    public ResponseEntity<BreedingGoals> getAll() {
-        return ResponseEntity.ok(goalService.getGoals());
+    public ResponseEntity<BreedingProjects> getAll() {
+        return ResponseEntity.ok(projectService.getProjects());
     }
 
     @PostMapping
-    public ResponseEntity<BreedingGoal> addNew(@RequestBody final NewGoalRequest newGoal, final Workspace workspace, final UriComponentsBuilder ucb) {
-        BreedingGoal added = goalService.addGoal(newGoal, workspace);
-        URI uri = ucb.path("goals/{id}").buildAndExpand(added.id()).toUri();
+    public ResponseEntity<BreedingProject> addNew(@RequestBody final NewProjectRequest request, final Workspace workspace, final UriComponentsBuilder ucb) {
+        BreedingProject added = projectService.addProject(request, workspace);
+        URI uri = ucb.path("projects/{id}").buildAndExpand(added.id()).toUri();
         return ResponseEntity.created(uri).body(added);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteOne(@PathVariable("id") final Long id, final Workspace workspace) {
-        goalService.deleteGoal(id, workspace.getId());
+        projectService.deleteProject(id, workspace.getId());
         return ResponseEntity.ok().build();
     }
 

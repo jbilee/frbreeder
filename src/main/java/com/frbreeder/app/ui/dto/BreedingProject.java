@@ -1,7 +1,8 @@
 package com.frbreeder.app.ui.dto;
 
-public record BreedingGoal(
+public record BreedingProject(
         long id,
+        Long frId,
         String name,
         String breed,
         String primaryGene,

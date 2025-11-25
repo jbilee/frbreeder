@@ -14,8 +14,7 @@ public interface DragonRepository extends ListCrudRepository<Dragon, Long> {
             "breed",
             "primaryGene",
             "secondaryGene",
-            "tertiaryGene",
-            "workspace"
+            "tertiaryGene"
     })
     List<Dragon> findAllByWorkspaceId(final Long workspaceId);
 

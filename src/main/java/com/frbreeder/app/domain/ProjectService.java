@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.common.error.InvalidRequestException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.PrimaryGene;
@@ -120,6 +121,12 @@ public class ProjectService {
     @Transactional
     public void deleteProject(final Long id, final Long workspaceId) {
         projectRepository.deleteByIdAndWorkspaceId(id, workspaceId);
+    }
+
+    public BreedingProject getProject(final Long workspaceId, final Long id) {
+        Project project = projectRepository.findByIdAndWorkspaceId(id, workspaceId)
+                .orElseThrow(() -> new InvalidRequestException("The project by that id does not exist."));
+        return getBreedingProject(project);
     }
 
 }

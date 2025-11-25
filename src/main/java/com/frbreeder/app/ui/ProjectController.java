@@ -31,6 +31,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjects(workspace.getId()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BreedingProject> getOne(@PathVariable("id") final Long id, final Workspace workspace) {
+        return ResponseEntity.ok(projectService.getProject(workspace.getId(), id));
+    }
+
     @PostMapping
     public ResponseEntity<BreedingProject> addNew(@RequestBody final NewProjectRequest request, final Workspace workspace, final UriComponentsBuilder ucb) {
         BreedingProject added = projectService.addProject(request, workspace);

@@ -38,8 +38,8 @@ public class ProjectService {
         this.tertiaryGeneRepository = tertiaryGeneRepository;
     }
 
-    public BreedingProjects getProjects() {
-        List<Project> projects = projectRepository.findAll();
+    public BreedingProjects getProjects(final Long workspaceId) {
+        List<Project> projects = projectRepository.findAllByWorkspaceId(workspaceId);
         return new BreedingProjects(
                 projects.stream()
                         .map(this::getBreedingProject)

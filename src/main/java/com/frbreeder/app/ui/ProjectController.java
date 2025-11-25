@@ -27,8 +27,8 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<BreedingProjects> getAll() {
-        return ResponseEntity.ok(projectService.getProjects());
+    public ResponseEntity<BreedingProjects> getAll(final Workspace workspace) {
+        return ResponseEntity.ok(projectService.getProjects(workspace.getId()));
     }
 
     @PostMapping

@@ -66,6 +66,7 @@ public class DragonService {
     private RosterDragon getRosterDragon(final Dragon dragon) {
         return new RosterDragon(
                 dragon.getId(),
+                dragon.getFrId(),
                 dragon.getName(),
                 dragon.getBreed().getName(),
                 dragon.getGender(),

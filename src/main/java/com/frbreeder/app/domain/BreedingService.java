@@ -121,7 +121,7 @@ public class BreedingService {
 
     public List<DragonPair> getDragonPairs(final long workspaceId) {
         return breedingPairRepository.findAllByWorkspaceId(workspaceId).stream()
-                .map(pair -> new DragonPair(pair.getName(), getRosterDragon(pair.getMale()), getRosterDragon(pair.getFemale())))
+                .map(pair -> new DragonPair(pair.getId(), pair.getName(), getRosterDragon(pair.getMale()), getRosterDragon(pair.getFemale())))
                 .toList();
     }
 
@@ -148,6 +148,11 @@ public class BreedingService {
         BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
 
         breedingPairRepository.save(breedingPair);
+    }
+
+    @Transactional
+    public void deletePair(final Long id, final Long workspaceId) {
+        breedingPairRepository.deleteByIdAndWorkspaceId(id, workspaceId);
     }
 
 }

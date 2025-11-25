@@ -1,6 +1,5 @@
 package com.frbreeder.app.common.error;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,8 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AppExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidRequestException(final Exception e, final HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleInvalidRequestException(final Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(final Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.NOT_FOUND.toString(), e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

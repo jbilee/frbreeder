@@ -6,6 +6,7 @@ import com.frbreeder.app.domain.entity.Goal;
 import com.frbreeder.app.domain.entity.PrimaryGene;
 import com.frbreeder.app.domain.entity.SecondaryGene;
 import com.frbreeder.app.domain.entity.TertiaryGene;
+import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.GoalRepository;
 import com.frbreeder.app.infrastructure.PrimaryGeneRepository;
@@ -13,10 +14,12 @@ import com.frbreeder.app.infrastructure.SecondaryGeneRepository;
 import com.frbreeder.app.infrastructure.TertiaryGeneRepository;
 import com.frbreeder.app.ui.dto.BreedingGoal;
 import com.frbreeder.app.ui.dto.BreedingGoals;
+import com.frbreeder.app.ui.dto.NewGoalRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GoalService {
@@ -44,8 +47,9 @@ public class GoalService {
         );
     }
 
-    public BreedingGoal addGoal(final String scryUrl) {
-        Goal goal = parseScryUrl(scryUrl);
+    @Transactional
+    public BreedingGoal addGoal(final NewGoalRequest request, final Workspace workspace) {
+        Goal goal = parseScryUrl(request.name(), request.scryUrl(), workspace);
         Goal newGoal = goalRepository.save(goal);
         return getBreedingGoal(newGoal);
     }
@@ -53,6 +57,7 @@ public class GoalService {
     private BreedingGoal getBreedingGoal(final Goal goal) {
         return new BreedingGoal(
                 goal.getId(),
+                goal.getName(),
                 goal.getBreed().getName(),
                 goal.getPrimaryGene().getName(),
                 goal.getSecondaryGene().getName(),
@@ -63,7 +68,7 @@ public class GoalService {
         );
     }
 
-    private Goal parseScryUrl(final String url) {
+    private Goal parseScryUrl(final String name, final String url, final Workspace workspace) {
         String queryParams = url.substring(url.indexOf("?") + 1);
         String[] queryPairs = queryParams.split("&");
         Map<String, Integer> queries = new HashMap<>();
@@ -75,6 +80,8 @@ public class GoalService {
         }
 
         return new Goal(
+                name,
+                url,
                 getBreedFromScry(queries.get("breed")),
                 queries.get("gender"),
                 getPrimaryGeneFromScry(queries.get("bodygene")),
@@ -83,7 +90,8 @@ public class GoalService {
                 queries.get("body"),
                 queries.get("wings"),
                 queries.get("tert"),
-                queries.get("element").toString()
+                queries.get("element").toString(),
+                workspace
         );
     }
 
@@ -105,6 +113,11 @@ public class GoalService {
     private TertiaryGene getTertiaryGeneFromScry(final int geneId) {
         return tertiaryGeneRepository.findById(geneId)
                 .orElseThrow();
+    }
+
+    @Transactional
+    public void deleteGoal(final Long id, final Long workspaceId) {
+        goalRepository.deleteByIdAndWorkspaceId(id, workspaceId);
     }
 
 }

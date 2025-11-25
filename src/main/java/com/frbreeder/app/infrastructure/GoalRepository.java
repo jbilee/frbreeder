@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GoalRepository extends ListCrudRepository<Goal, Long> {
+
+    void deleteByIdAndWorkspaceId(Long id, Long workspaceId);
+
 }

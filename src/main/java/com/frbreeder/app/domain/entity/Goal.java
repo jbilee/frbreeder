@@ -9,15 +9,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "goals")
+@SQLDelete(sql = "UPDATE goals SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 public class Goal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+    private String scryUrl;
     private String gender;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,11 +47,15 @@ public class Goal {
     private Integer tertiaryColorId;
     private String flight;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workspace_id", nullable = false)
+    private Workspace workspace;
+
     protected Goal() {
     }
 
     public Goal(
-            final Breed breed,
+            final String name, final String scryUrl, final Breed breed,
             final int gender,
             final PrimaryGene primaryGene,
             final SecondaryGene secondaryGene,
@@ -53,10 +63,12 @@ public class Goal {
             final int primaryColorId,
             final int secondaryColorId,
             final int tertiaryColorId,
-            final String flight
+            final String flight, final Workspace workspace
     ) {
+        this.name = name;
+        this.scryUrl = scryUrl;
         this.breed = breed;
-        this.gender = gender == 0 ? "M" : "F";
+        this.gender = gender == 0 ? "Male" : "Female";
         this.primaryGene = primaryGene;
         this.secondaryGene = secondaryGene;
         this.tertiaryGene = tertiaryGene;
@@ -64,14 +76,23 @@ public class Goal {
         this.secondaryColorId = secondaryColorId;
         this.tertiaryColorId = tertiaryColorId;
         this.flight = flight;
+        this.workspace = workspace;
     }
 
     public long getId() {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Breed getBreed() {
         return breed;
+    }
+
+    public String getScryUrl() {
+        return scryUrl;
     }
 
     public String getGender() {
@@ -104,6 +125,10 @@ public class Goal {
 
     public String getFlight() {
         return flight;
+    }
+
+    public Workspace getWorkspace() {
+        return workspace;
     }
 
     @Override

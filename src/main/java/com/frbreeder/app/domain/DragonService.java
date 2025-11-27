@@ -68,10 +68,18 @@ public class DragonService {
                 dragon.getPrimaryGene().getName(),
                 dragon.getSecondaryGene().getName(),
                 dragon.getTertiaryGene().getName(),
-                FrColor.findByFrId(dragon.getPrimaryColorId()).getName(),
-                FrColor.findByFrId(dragon.getSecondaryColorId()).getName(),
-                FrColor.findByFrId(dragon.getTertiaryColorId()).getName()
+                getColorName(dragon.getPrimaryColorId()),
+                getColorName(dragon.getSecondaryColorId()),
+                getColorName(dragon.getTertiaryColorId())
         );
+    }
+
+    private String getColorName(final int id) {
+        FrColor color = FrColor.findByFrId(id);
+        if (color == null) {
+            throw new NotFoundException("This color is not in the database.");
+        }
+        return color.getName();
     }
 
     @Transactional
@@ -117,7 +125,7 @@ public class DragonService {
 
     private Breed getBreedFromScry(final int breedId) {
         return breedRepository.findById(breedId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("This breed is not in the database."));
     }
 
     private PrimaryGene getPrimaryGeneFromScry(final int geneId) {

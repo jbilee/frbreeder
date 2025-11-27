@@ -1,5 +1,7 @@
 package com.frbreeder.app.domain.entity;
 
+import com.frbreeder.app.common.error.NotFoundException;
+import com.frbreeder.app.domain.common.FrColor;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -55,26 +57,19 @@ public class Dragon {
     protected Dragon() {
     }
 
-    public Dragon(
-            final Long frId,
-            final String scryUrl,
-            final String name,
-            final Breed breed,
-            final int gender,
-            final PrimaryGene primaryGene,
-            final SecondaryGene secondaryGene,
-            final TertiaryGene tertiaryGene,
-            final int primaryColorId,
-            final int secondaryColorId,
-            final int tertiaryColorId,
-            final String flight,
-            final Workspace workspace
+    public Dragon(final Long frId, final String scryUrl, final String name, final Breed breed, final int gender,
+                  final PrimaryGene primaryGene, final SecondaryGene secondaryGene, final TertiaryGene tertiaryGene,
+                  final int primaryColorId, final int secondaryColorId, final int tertiaryColorId, final String flight,
+                  final Workspace workspace
     ) {
+        validateGender(gender);
+        validateColors(primaryColorId, secondaryColorId, tertiaryColorId);
+
         this.frId = frId;
         this.scryUrl = scryUrl;
         this.name = name;
         this.breed = breed;
-        this.gender = gender == 0 ? "M" : "F";
+        this.gender = gender == 0 ? "Male" : "Female";
         this.primaryGene = primaryGene;
         this.secondaryGene = secondaryGene;
         this.tertiaryGene = tertiaryGene;
@@ -83,6 +78,20 @@ public class Dragon {
         this.tertiaryColorId = tertiaryColorId;
         this.flight = flight;
         this.workspace = workspace;
+    }
+
+    private void validateGender(final int gender) {
+        if (gender < 0 || gender > 1) {
+            throw new IllegalArgumentException("Gender value must be either 0 or 1.");
+        }
+    }
+
+    private void validateColors(final int... colorIds) {
+        for (int colorId : colorIds) {
+            if (!FrColor.hasId(colorId)) {
+                throw new NotFoundException("This color is not in the database.");
+            }
+        }
     }
 
     public long getId() {

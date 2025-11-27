@@ -75,11 +75,7 @@ public class DragonService {
     }
 
     private String getColorName(final int id) {
-        FrColor color = FrColor.findByFrId(id);
-        if (color == null) {
-            throw new NotFoundException("This color is not in the database.");
-        }
-        return color.getName();
+        return FrColor.findByFrId(id).getName();
     }
 
     @Transactional

@@ -205,6 +205,10 @@ public enum FrColor {
         this.name = name;
     }
 
+    public static boolean hasId(final int id) {
+        return CACHE.containsKey(id);
+    }
+
     public static FrColor findByFrId(final int id) {
         return CACHE.get(id);
     }

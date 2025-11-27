@@ -4,15 +4,17 @@ import com.frbreeder.app.domain.WorkspaceService;
 import com.frbreeder.app.domain.entity.Workspace;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final WorkspaceService workspaceService;
     private final TokenProvider jwtTokenProvider;
     private final CookieTokenExtractor authorizationExtractor;
 
-    public LoginInterceptor(final WorkspaceService workspaceService, TokenProvider jwtTokenProvider) {
+    public LoginInterceptor(final WorkspaceService workspaceService, final TokenProvider jwtTokenProvider) {
         this.workspaceService = workspaceService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authorizationExtractor = new CookieTokenExtractor();

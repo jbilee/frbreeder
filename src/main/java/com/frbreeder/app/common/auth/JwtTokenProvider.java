@@ -24,7 +24,7 @@ public class JwtTokenProvider implements TokenProvider {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Workspace workspace) {
+    public String createToken(final Workspace workspace) {
         return Jwts.builder()
                 .subject(workspace.getId().toString())
                 .claim("name", workspace.getName())
@@ -34,11 +34,11 @@ public class JwtTokenProvider implements TokenProvider {
                 .compact();
     }
 
-    public Long getWorkspaceIdFromToken(String token) {
+    public Long getWorkspaceIdFromToken(final String token) {
         return Long.valueOf(getJwtClaims(token).getSubject());
     }
 
-    private Claims getJwtClaims(String token) {
+    private Claims getJwtClaims(final String token) {
         try {
             return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException e) {

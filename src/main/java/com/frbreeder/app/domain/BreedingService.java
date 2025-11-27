@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.common.error.NotFoundException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.common.Rarity;
 import com.frbreeder.app.domain.entity.Breed;
@@ -33,14 +34,16 @@ public class BreedingService {
 
     public BreedingResult getResult(final long parentAId, final long parentBId) {
         if (parentAId == parentBId) {
-            throw new IllegalArgumentException("Can't be identical.");
+            throw new IllegalArgumentException("Dragons can't be identical.");
         }
 
-        Dragon parentA = dragonRepository.findById(parentAId).orElseThrow();
-        Dragon parentB = dragonRepository.findById(parentBId).orElseThrow();
+        Dragon parentA = dragonRepository.findById(parentAId)
+                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+        Dragon parentB = dragonRepository.findById(parentBId)
+                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
 
         if (parentA.getGender().equals(parentB.getGender())) {
-            throw new IllegalArgumentException("Can't be of the same gender.");
+            throw new IllegalArgumentException("Dragons can't be of the same gender.");
         }
 
         // TODO: Validate lineage
@@ -98,8 +101,7 @@ public class BreedingService {
         int wrapDistance = getWrapDistance(distance);
 
         if (distance == wrapDistance) {
-            // TODO: Replace with appropriate exception
-            throw new RuntimeException("This isn't supposed to happen");
+            throw new RuntimeException("Could not find the appropriate color range.");
         }
 
         int start = Math.min(aGradientOrder, bGradientOrder);
@@ -143,8 +145,10 @@ public class BreedingService {
 
     @Transactional
     public void addBreedingPair(final NewPairRequest request, final Workspace workspace) {
-        Dragon maleDragon = dragonRepository.findById(request.maleId()).orElseThrow();
-        Dragon femaleDragon = dragonRepository.findById(request.femaleId()).orElseThrow();
+        Dragon maleDragon = dragonRepository.findById(request.maleId())
+                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+        Dragon femaleDragon = dragonRepository.findById(request.femaleId())
+                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
 
         BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
 

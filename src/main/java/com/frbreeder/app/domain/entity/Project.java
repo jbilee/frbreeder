@@ -26,27 +26,17 @@ public class Project {
     private String name;
     private String scryUrl;
     private String gender;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "breed_id", nullable = false)
-    private Breed breed;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "primary_gene_id", nullable = false)
-    private PrimaryGene primaryGene;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "secondary_gene_id", nullable = false)
-    private SecondaryGene secondaryGene;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tertiary_gene_id", nullable = false)
-    private TertiaryGene tertiaryGene;
-
+    private String primaryGene;
+    private String secondaryGene;
+    private String tertiaryGene;
     private Integer primaryColorId;
     private Integer secondaryColorId;
     private Integer tertiaryColorId;
     private String flight;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "breed_id", nullable = false)
+    private Breed breed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
@@ -56,15 +46,9 @@ public class Project {
     }
 
     public Project(
-            final Long frId, final String name, final String scryUrl, final Breed breed,
-            final int gender,
-            final PrimaryGene primaryGene,
-            final SecondaryGene secondaryGene,
-            final TertiaryGene tertiaryGene,
-            final int primaryColorId,
-            final int secondaryColorId,
-            final int tertiaryColorId,
-            final String flight, final Workspace workspace
+            final Long frId, final String name, final String scryUrl, final Breed breed, final int gender,
+            final String primaryGene, final String secondaryGene, final String tertiaryGene, final int primaryColorId,
+            final int secondaryColorId, final int tertiaryColorId, final String flight, final Workspace workspace
     ) {
         this.frId = frId;
         this.name = name;
@@ -105,15 +89,15 @@ public class Project {
         return gender;
     }
 
-    public PrimaryGene getPrimaryGene() {
+    public String getPrimaryGene() {
         return primaryGene;
     }
 
-    public SecondaryGene getSecondaryGene() {
+    public String getSecondaryGene() {
         return secondaryGene;
     }
 
-    public TertiaryGene getTertiaryGene() {
+    public String getTertiaryGene() {
         return tertiaryGene;
     }
 

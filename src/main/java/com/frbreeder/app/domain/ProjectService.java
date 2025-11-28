@@ -1,12 +1,10 @@
 package com.frbreeder.app.domain;
 
 import com.frbreeder.app.common.error.InvalidRequestException;
+import com.frbreeder.app.common.error.NotFoundException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
-import com.frbreeder.app.domain.entity.PrimaryGene;
 import com.frbreeder.app.domain.entity.Project;
-import com.frbreeder.app.domain.entity.SecondaryGene;
-import com.frbreeder.app.domain.entity.TertiaryGene;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.PrimaryGeneRepository;
@@ -61,9 +59,9 @@ public class ProjectService {
                 project.getFrId(),
                 project.getName(),
                 project.getBreed().getName(),
-                project.getPrimaryGene().getName(),
-                project.getSecondaryGene().getName(),
-                project.getTertiaryGene().getName(),
+                project.getPrimaryGene(),
+                project.getSecondaryGene(),
+                project.getTertiaryGene(),
                 FrColor.findByFrId(project.getPrimaryColorId()).getName(),
                 FrColor.findByFrId(project.getSecondaryColorId()).getName(),
                 FrColor.findByFrId(project.getTertiaryColorId()).getName()
@@ -103,19 +101,22 @@ public class ProjectService {
                 .orElseThrow();
     }
 
-    private PrimaryGene getPrimaryGeneFromScry(final int geneId) {
+    private String getPrimaryGeneFromScry(final int geneId) {
         return primaryGeneRepository.findById(geneId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("This primary gene is not in the database."))
+                .getName();
     }
 
-    private SecondaryGene getSecondaryGeneFromScry(final int geneId) {
+    private String getSecondaryGeneFromScry(final int geneId) {
         return secondaryGeneRepository.findById(geneId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("This secondary gene is not in the database."))
+                .getName();
     }
 
-    private TertiaryGene getTertiaryGeneFromScry(final int geneId) {
+    private String getTertiaryGeneFromScry(final int geneId) {
         return tertiaryGeneRepository.findById(geneId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("This tertiary gene is not in the database."))
+                .getName();
     }
 
     @Transactional

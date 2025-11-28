@@ -28,27 +28,17 @@ public class Dragon {
     private String scryUrl;
     private String name;
     private String gender;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "primary_gene_id", nullable = false)
-    private PrimaryGene primaryGene;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "secondary_gene_id", nullable = false)
-    private SecondaryGene secondaryGene;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tertiary_gene_id", nullable = false)
-    private TertiaryGene tertiaryGene;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "breed_id", nullable = false)
-    private Breed breed;
-
+    private String primaryGene;
+    private String secondaryGene;
+    private String tertiaryGene;
     private Integer primaryColorId;
     private Integer secondaryColorId;
     private Integer tertiaryColorId;
     private String flight;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "breed_id", nullable = false)
+    private Breed breed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id", nullable = false)
@@ -58,9 +48,8 @@ public class Dragon {
     }
 
     public Dragon(final Long frId, final String scryUrl, final String name, final Breed breed, final int gender,
-                  final PrimaryGene primaryGene, final SecondaryGene secondaryGene, final TertiaryGene tertiaryGene,
-                  final int primaryColorId, final int secondaryColorId, final int tertiaryColorId, final String flight,
-                  final Workspace workspace
+                  final String primaryGene, final String secondaryGene, final String tertiaryGene, final int primaryColorId,
+                  final int secondaryColorId, final int tertiaryColorId, final String flight, final Workspace workspace
     ) {
         validateGender(gender);
         validateColors(primaryColorId, secondaryColorId, tertiaryColorId);
@@ -118,15 +107,15 @@ public class Dragon {
         return gender;
     }
 
-    public PrimaryGene getPrimaryGene() {
+    public String getPrimaryGene() {
         return primaryGene;
     }
 
-    public SecondaryGene getSecondaryGene() {
+    public String getSecondaryGene() {
         return secondaryGene;
     }
 
-    public TertiaryGene getTertiaryGene() {
+    public String getTertiaryGene() {
         return tertiaryGene;
     }
 

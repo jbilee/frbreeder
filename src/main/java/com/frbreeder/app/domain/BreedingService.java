@@ -6,10 +6,11 @@ import com.frbreeder.app.domain.common.Rarity;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.BreedingPair;
 import com.frbreeder.app.domain.entity.Dragon;
-import com.frbreeder.app.domain.entity.Gene;
+import com.frbreeder.app.domain.entity.GeneRarity;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedingPairRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
+import com.frbreeder.app.infrastructure.GeneRarityRepository;
 import com.frbreeder.app.ui.dto.BreedingResult;
 import com.frbreeder.app.ui.dto.DragonPair;
 import com.frbreeder.app.ui.dto.GeneProbability;
@@ -26,10 +27,12 @@ public class BreedingService {
 
     private final DragonRepository dragonRepository;
     private final BreedingPairRepository breedingPairRepository;
+    private final GeneRarityRepository geneRarityRepository;
 
-    public BreedingService(final DragonRepository dragonRepository, final BreedingPairRepository breedingPairRepository) {
+    public BreedingService(final DragonRepository dragonRepository, final BreedingPairRepository breedingPairRepository, final GeneRarityRepository geneRarityRepository) {
         this.dragonRepository = dragonRepository;
         this.breedingPairRepository = breedingPairRepository;
+        this.geneRarityRepository = geneRarityRepository;
     }
 
     public BreedingResult getResult(final long parentAId, final long parentBId) {
@@ -74,19 +77,21 @@ public class BreedingService {
         return List.of(new GeneProbability(a.getName(), weightA), new GeneProbability(b.getName(), weightB));
     }
 
-    private List<GeneProbability> calculateGeneProbability(final Gene a, final Gene b) {
-        String aName = a.getName();
-        String bName = b.getName();
-
-        if (aName.equals(bName)) {
-            return List.of(new GeneProbability(a.getName(), 100));
+    private List<GeneProbability> calculateGeneProbability(final String geneNameA, final String geneNameB) {
+        if (geneNameA.equals(geneNameB)) {
+            return List.of(new GeneProbability(geneNameA, 100));
         }
 
-        Rarity rarityA = a.getRarity();
-        Rarity rarityB = b.getRarity();
+        GeneRarity geneRarityA = geneRarityRepository.findByName(geneNameA)
+                .orElseThrow();
+        GeneRarity geneRarityB = geneRarityRepository.findByName(geneNameB)
+                .orElseThrow();
+
+        Rarity rarityA = geneRarityA.getRarity();
+        Rarity rarityB = geneRarityB.getRarity();
         int weightA = rarityA.findWeight(rarityB);
         int weightB = rarityB.findWeight(rarityA);
-        return List.of(new GeneProbability(a.getName(), weightA), new GeneProbability(b.getName(), weightB));
+        return List.of(new GeneProbability(geneNameA, weightA), new GeneProbability(geneNameB, weightB));
     }
 
     private PossibleColors getColorRange(final int aId, final int bId) {
@@ -134,9 +139,9 @@ public class BreedingService {
                 dragon.getName(),
                 dragon.getBreed().getName(),
                 dragon.getGender(),
-                dragon.getPrimaryGene().getName(),
-                dragon.getSecondaryGene().getName(),
-                dragon.getTertiaryGene().getName(),
+                dragon.getPrimaryGene(),
+                dragon.getSecondaryGene(),
+                dragon.getTertiaryGene(),
                 FrColor.findByFrId(dragon.getPrimaryColorId()).getName(),
                 FrColor.findByFrId(dragon.getSecondaryColorId()).getName(),
                 FrColor.findByFrId(dragon.getTertiaryColorId()).getName()

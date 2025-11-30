@@ -56,7 +56,7 @@ public class Dragon {
 
         this.frId = frId;
         this.scryUrl = scryUrl;
-        this.name = name;
+        this.name = name == null ? "Unnamed" : name;
         this.breed = breed;
         this.gender = gender == 0 ? "Male" : "Female";
         this.primaryGene = primaryGene;

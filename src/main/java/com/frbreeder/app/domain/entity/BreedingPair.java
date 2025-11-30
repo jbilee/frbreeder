@@ -42,7 +42,7 @@ public class BreedingPair {
         validateObject(male, female, workspace);
         validateGender(male, female);
 
-        this.name = name;
+        this.name = name == null ? "New Pair" : name;
         this.male = male;
         this.female = female;
         this.workspace = workspace;

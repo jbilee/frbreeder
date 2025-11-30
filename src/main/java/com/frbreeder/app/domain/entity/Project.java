@@ -51,7 +51,7 @@ public class Project {
             final int secondaryColorId, final int tertiaryColorId, final String flight, final Workspace workspace
     ) {
         this.frId = frId;
-        this.name = name;
+        this.name = name == null ? "New Project" : name;
         this.scryUrl = scryUrl;
         this.breed = breed;
         this.gender = gender == 0 ? "Male" : "Female";

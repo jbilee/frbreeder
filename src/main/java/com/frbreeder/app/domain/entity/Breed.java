@@ -54,6 +54,10 @@ public class Breed {
         }
     }
 
+    public boolean isSameType(final Breed other) {
+        return type.equals(other.type);
+    }
+
     public String getName() {
         return name;
     }

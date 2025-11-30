@@ -1,5 +1,6 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.common.error.InvalidRequestException;
 import com.frbreeder.app.common.error.NotFoundException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.common.Rarity;
@@ -37,16 +38,19 @@ public class BreedingService {
 
     public BreedingResult getResult(final long parentAId, final long parentBId) {
         if (parentAId == parentBId) {
-            throw new IllegalArgumentException("Dragons can't be identical.");
+            throw new InvalidRequestException("Dragons can't be identical.");
         }
 
         Dragon parentA = dragonRepository.findById(parentAId)
-                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", parentAId)));
         Dragon parentB = dragonRepository.findById(parentBId)
-                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", parentBId)));
 
         if (parentA.getGender().equals(parentB.getGender())) {
-            throw new IllegalArgumentException("Dragons can't be of the same gender.");
+            throw new InvalidRequestException("Dragons can't be of the same gender.");
+        }
+        if (!parentA.getBreed().isSameType(parentB.getBreed())) {
+            throw new InvalidRequestException("Modern and ancient dragons cannot breed with each other.");
         }
 
         // TODO: Validate lineage
@@ -128,7 +132,13 @@ public class BreedingService {
 
     public List<DragonPair> getDragonPairs(final long workspaceId) {
         return breedingPairRepository.findAllByWorkspaceId(workspaceId).stream()
-                .map(pair -> new DragonPair(pair.getId(), pair.getName(), getRosterDragon(pair.getMale()), getRosterDragon(pair.getFemale())))
+                .map(pair -> new DragonPair(
+                                pair.getId(),
+                                pair.getName(),
+                                getRosterDragon(pair.getMale()),
+                                getRosterDragon(pair.getFemale())
+                        )
+                )
                 .toList();
     }
 
@@ -151,9 +161,9 @@ public class BreedingService {
     @Transactional
     public void addBreedingPair(final NewPairRequest request, final Workspace workspace) {
         Dragon maleDragon = dragonRepository.findById(request.maleId())
-                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", request.maleId())));
         Dragon femaleDragon = dragonRepository.findById(request.femaleId())
-                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", request.femaleId())));
 
         BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
 

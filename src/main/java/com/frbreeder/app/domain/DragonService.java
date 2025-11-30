@@ -142,14 +142,14 @@ public class DragonService {
     @Transactional(readOnly = true)
     public RegisteredDragon getDragon(final Long id, final Long workspaceId) {
         Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
-                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", id)));
         return new RegisteredDragon(dragon.getScryUrl(), dragon.getName(), id);
     }
 
     @Transactional
     public void deleteDragon(final Long id, final Long workspaceId) {
         Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
-                .orElseThrow(() -> new NotFoundException("The dragon by that id does not exist."));
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", id)));
         dragonRepository.deleteById(dragon.getId());
     }
 

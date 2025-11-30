@@ -15,21 +15,28 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequestException(final Exception e, final HttpServletRequest request) {
-        log.warn("[REQUEST] {} {} | error: {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+        log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(final Exception e, final HttpServletRequest request) {
-        log.warn("[REQUEST] {} {} | error: {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+        log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(HttpStatus.NOT_FOUND.toString(), e.getMessage()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(final Exception e, final HttpServletRequest request) {
+        log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleDefaultException(final Exception e, final HttpServletRequest request) {
-        log.warn("[REQUEST] {} {} | error: {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+        log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), "No access."));
     }

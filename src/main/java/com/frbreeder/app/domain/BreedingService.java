@@ -49,7 +49,10 @@ public class BreedingService {
         if (parentA.getGender().equals(parentB.getGender())) {
             throw new InvalidRequestException("Dragons can't be of the same gender.");
         }
-        if (!parentA.getBreed().isSameType(parentB.getBreed())) {
+
+        String breedAType = parentA.getBreed().getType();
+        String breedBType = parentB.getBreed().getType();
+        if (!breedAType.equals(breedBType)) {
             throw new InvalidRequestException("Modern and ancient dragons cannot breed with each other.");
         }
 

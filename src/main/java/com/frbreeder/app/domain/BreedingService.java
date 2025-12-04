@@ -168,6 +168,12 @@ public class BreedingService {
         Dragon femaleDragon = dragonRepository.findById(request.femaleId())
                 .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", request.femaleId())));
 
+        String maleBreedType = maleDragon.getBreed().getType();
+        String femaleBreedType = femaleDragon.getBreed().getType();
+        if (!maleBreedType.equals(femaleBreedType)) {
+            throw new InvalidRequestException("Modern and ancient dragons cannot breed with each other.");
+        }
+
         BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
 
         breedingPairRepository.save(breedingPair);

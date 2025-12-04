@@ -42,11 +42,11 @@ public class JwtTokenProvider implements TokenProvider {
         try {
             return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException e) {
-            throw new IllegalArgumentException("Token is invalid.");
+            throw new IllegalArgumentException("Session token is invalid.");
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("Token has expired.");
+            throw new IllegalArgumentException("Login session has expired.");
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Token is empty.");
+            throw new IllegalArgumentException("Session token is empty.");
         }
     }
 

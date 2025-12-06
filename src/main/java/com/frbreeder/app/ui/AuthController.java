@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,6 +73,22 @@ public class AuthController {
     @GetMapping("/auth")
     public ResponseEntity<AuthStatusResponse> checkAuthStatus(final Workspace workspace) {
         return ResponseEntity.ok(new AuthStatusResponse("OK", workspace.getName()));
+    }
+
+    @DeleteMapping("/auth/remove")
+    public ResponseEntity<Void> deleteWorkspace(final Workspace workspace, final HttpServletResponse response) {
+        workspaceService.deleteWorkspace(workspace.getId());
+
+        ResponseCookie cookie = ResponseCookie.from("token", null)
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -2,6 +2,7 @@ package com.frbreeder.app.domain;
 
 import com.frbreeder.app.common.auth.TokenProvider;
 import com.frbreeder.app.common.error.InvalidRequestException;
+import com.frbreeder.app.common.error.NotFoundException;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.WorkspaceRepository;
 import com.frbreeder.app.ui.dto.NewWorkspace;
@@ -46,15 +47,21 @@ public class WorkspaceService {
     }
 
     public Workspace findWorkspaceById(final Long id) {
-        return workspaceRepository.findById(id).orElseThrow();
+        return workspaceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Workspace does not exist."));
     }
 
     @Transactional
     public TokenResponse login(final WorkspaceLoginRequest request) {
-        Workspace workspace = workspaceRepository.findByNameAndPassword(request.name(), request.password()).orElseThrow();
+        Workspace workspace = workspaceRepository.findByNameAndPassword(request.name(), request.password())
+                .orElseThrow(() -> new InvalidRequestException("Invalid credentials. Please check your login credentials."));
         workspaceRepository.updatedLastLoggedIn(workspace.getId());
         String token = jwtTokenProvider.createToken(workspace);
         return new TokenResponse(token);
+    }
+
+    public void deleteWorkspace(final Long workspaceId) {
+        workspaceRepository.deleteById(workspaceId);
     }
 
 }

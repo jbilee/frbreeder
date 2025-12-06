@@ -4,8 +4,8 @@ import com.frbreeder.app.domain.entity.Workspace;
 
 public interface TokenProvider {
 
-    String createToken(Workspace workspace);
+    String createToken(final Workspace workspace);
 
-    Long getWorkspaceIdFromToken(String token);
+    Long getWorkspaceIdFromToken(final String token);
 
 }

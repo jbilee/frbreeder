@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 @RequestMapping("/dragons")
@@ -33,7 +32,7 @@ public class DragonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RegisteredDragon> getOne(@PathVariable("id") final Long id, final Workspace workspace) {
-        return ResponseEntity.ok(dragonService.getDragon(workspace.getId(), id));
+        return ResponseEntity.ok(dragonService.getDragon(id, workspace.getId()));
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +42,7 @@ public class DragonController {
     }
 
     @PostMapping
-    public ResponseEntity<RosterDragons> addNew(@RequestBody final NewDragonRequest request, final Workspace workspace, final UriComponentsBuilder ucb) {
+    public ResponseEntity<RosterDragons> addNew(@RequestBody final NewDragonRequest request, final Workspace workspace) {
         RosterDragons added = dragonService.addDragons(workspace, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(added);
     }

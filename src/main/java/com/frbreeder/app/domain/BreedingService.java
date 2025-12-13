@@ -184,7 +184,7 @@ public class BreedingService {
     }
 
     public List<DragonPair> searchPairByGender(final String gender, final Long id, final Long workspaceId) {
-        if (gender.equals("male")) {
+        if (gender.equalsIgnoreCase("male")) {
             return breedingPairRepository.findByMaleIdAndWorkspaceId(id, workspaceId).stream()
                     .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                     .map(pair -> new DragonPair(
@@ -196,7 +196,7 @@ public class BreedingService {
                     )
                     .toList();
         }
-        if (gender.equals("female")) {
+        if (gender.equalsIgnoreCase("female")) {
             return breedingPairRepository.findByFemaleIdAndWorkspaceId(id, workspaceId).stream()
                     .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                     .map(pair -> new DragonPair(

@@ -1,11 +1,13 @@
 package com.frbreeder.app.domain;
 
+import com.frbreeder.app.common.error.DataConstraintException;
 import com.frbreeder.app.common.error.NotFoundException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedRepository;
+import com.frbreeder.app.infrastructure.BreedingPairRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.infrastructure.PrimaryGeneRepository;
 import com.frbreeder.app.infrastructure.SecondaryGeneRepository;
@@ -34,15 +36,17 @@ public class DragonService {
     private final PrimaryGeneRepository primaryGeneRepository;
     private final SecondaryGeneRepository secondaryGeneRepository;
     private final TertiaryGeneRepository tertiaryGeneRepository;
+    private final BreedingPairRepository breedingPairRepository;
 
     public DragonService(final DragonRepository dragonRepository, final BreedRepository breedRepository,
                          final PrimaryGeneRepository primaryGeneRepository, final SecondaryGeneRepository secondaryGeneRepository,
-                         final TertiaryGeneRepository tertiaryGeneRepository) {
+                         final TertiaryGeneRepository tertiaryGeneRepository, final BreedingPairRepository breedingPairRepository) {
         this.dragonRepository = dragonRepository;
         this.breedRepository = breedRepository;
         this.primaryGeneRepository = primaryGeneRepository;
         this.secondaryGeneRepository = secondaryGeneRepository;
         this.tertiaryGeneRepository = tertiaryGeneRepository;
+        this.breedingPairRepository = breedingPairRepository;
     }
 
     @Transactional(readOnly = true)
@@ -79,39 +83,45 @@ public class DragonService {
     public RosterDragons addDragons(final Workspace workspace, final NewDragonRequest request) {
         List<RosterDragon> rosterDragons = new ArrayList<>();
         for (NewDragon requestDragon : request.dragons()) {
-            Dragon dragon = parseScryUrl(requestDragon.frId(), requestDragon.name(), requestDragon.scryUrl(), workspace);
+            log.info("[SERVICE] workspaceId: {}, frId: {}, scryUrl: {}", workspace.getId(), requestDragon.frId(), requestDragon.scryUrl());
+            Map<String, Integer> scryDetails = parseScryUrl(requestDragon.scryUrl());
+            Dragon dragon = createDragonFromScryDetails(scryDetails, requestDragon.scryUrl(), requestDragon.frId(), requestDragon.name(), workspace);
             Dragon newDragon = dragonRepository.save(dragon);
             rosterDragons.add(getRosterDragon(newDragon));
         }
         return new RosterDragons(rosterDragons);
     }
 
-    private Dragon parseScryUrl(final Long frId, final String name, final String url, final Workspace workspace) {
-        log.info("[SERVICE] workspaceId: {}, frId: {}, scryUrl: {}", workspace.getId(), frId, url);
-
+    private Map<String, Integer> parseScryUrl(final String url) {
         String queryParams = url.substring(url.indexOf("?") + 1);
         String[] queryPairs = queryParams.split("&");
-        Map<String, Integer> queries = new HashMap<>();
+        Map<String, Integer> scryDetails = new HashMap<>();
 
         for (final String pair : queryPairs) {
             String[] keyValue = pair.split("=");
             int value = Integer.parseInt(keyValue[1]);
-            queries.put(keyValue[0], value);
+            scryDetails.put(keyValue[0], value);
         }
 
+        return scryDetails;
+    }
+
+    private Dragon createDragonFromScryDetails(final Map<String, Integer> scryDetails, final String url, final Long frId,
+                                               final String name, final Workspace workspace
+    ) {
         return new Dragon(
                 frId,
                 url,
                 name,
-                getBreedFromScry(queries.get("breed")),
-                queries.get("gender"),
-                getPrimaryGeneFromScry(queries.get("bodygene")),
-                getSecondaryGeneFromScry(queries.get("winggene")),
-                getTertiaryGeneFromScry(queries.get("tertgene")),
-                queries.get("body"),
-                queries.get("wings"),
-                queries.get("tert"),
-                queries.get("element").toString(),
+                getBreedFromScry(scryDetails.get("breed")),
+                scryDetails.get("gender"),
+                getPrimaryGeneFromScry(scryDetails.get("bodygene")),
+                getSecondaryGeneFromScry(scryDetails.get("winggene")),
+                getTertiaryGeneFromScry(scryDetails.get("tertgene")),
+                scryDetails.get("body"),
+                scryDetails.get("wings"),
+                scryDetails.get("tert"),
+                scryDetails.get("element").toString(),
                 workspace
         );
     }
@@ -139,17 +149,34 @@ public class DragonService {
                 .getName();
     }
 
-    @Transactional(readOnly = true)
-    public RegisteredDragon getDragon(final Long id, final Long workspaceId) {
+    public RegisteredDragon getRegisteredDragon(final Long id, final Long workspaceId) {
         Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
                 .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", id)));
-        return new RegisteredDragon(dragon.getScryUrl(), dragon.getName(), id);
+        return new RegisteredDragon(id, dragon.getScryUrl(), dragon.getName(), dragon.getFrId());
+    }
+
+    public RosterDragon getDragon(final Long id, final Long workspaceId) {
+        Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
+                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", id)));
+        return getRosterDragon(dragon);
     }
 
     @Transactional
     public void deleteDragon(final Long id, final Long workspaceId) {
         Dragon dragon = dragonRepository.findByIdAndWorkspaceId(id, workspaceId)
                 .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", id)));
+
+        String gender = dragon.getGender();
+        boolean pairExists;
+        if (gender.equals("Male")) {
+            pairExists = breedingPairRepository.existsByMaleIdAndWorkspaceId(dragon.getId(), workspaceId);
+        } else {
+            pairExists = breedingPairRepository.existsByFemaleIdAndWorkspaceId(dragon.getId(), workspaceId);
+        }
+        if (pairExists) {
+            throw new DataConstraintException("This dragon is tied to a breeding pair.");
+        }
+
         dragonRepository.deleteById(dragon.getId());
     }
 

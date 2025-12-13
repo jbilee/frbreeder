@@ -1,5 +1,6 @@
 package com.frbreeder.app.common.auth;
 
+import com.frbreeder.app.common.error.UnauthorizedException;
 import com.frbreeder.app.domain.WorkspaceService;
 import com.frbreeder.app.domain.entity.Workspace;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         String token = authorizationExtractor.extract(request);
         if (token == null || token.isBlank()) {
-            throw new RuntimeException("Need to log in.");
+            throw new UnauthorizedException("Need to log in.");
         }
 
         Long workspaceId = jwtTokenProvider.getWorkspaceIdFromToken(token);

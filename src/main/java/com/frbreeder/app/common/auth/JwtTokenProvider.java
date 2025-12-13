@@ -1,5 +1,6 @@
 package com.frbreeder.app.common.auth;
 
+import com.frbreeder.app.common.error.UnauthorizedException;
 import com.frbreeder.app.domain.entity.Workspace;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -44,7 +45,7 @@ public class JwtTokenProvider implements TokenProvider {
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException e) {
             throw new IllegalArgumentException("Session token is invalid.");
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("Login session has expired.");
+            throw new UnauthorizedException("Login session has expired.");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Session token is empty.");
         }

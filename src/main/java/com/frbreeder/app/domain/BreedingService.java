@@ -135,6 +135,7 @@ public class BreedingService {
 
     public List<DragonPair> getDragonPairs(final long workspaceId) {
         return breedingPairRepository.findAllByWorkspaceId(workspaceId).stream()
+                .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                 .map(pair -> new DragonPair(
                                 pair.getId(),
                                 pair.getName(),
@@ -146,6 +147,9 @@ public class BreedingService {
     }
 
     private RosterDragon getRosterDragon(final Dragon dragon) {
+        if (dragon == null) {
+            throw new NotFoundException("The dragon from this pair does not exist.");
+        }
         return new RosterDragon(
                 dragon.getId(),
                 dragon.getFrId(),
@@ -177,6 +181,34 @@ public class BreedingService {
         BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
 
         breedingPairRepository.save(breedingPair);
+    }
+
+    public List<DragonPair> searchPairByGender(final String gender, final Long id, final Long workspaceId) {
+        if (gender.equals("male")) {
+            return breedingPairRepository.findByMaleIdAndWorkspaceId(id, workspaceId).stream()
+                    .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
+                    .map(pair -> new DragonPair(
+                                    pair.getId(),
+                                    pair.getName(),
+                                    getRosterDragon(pair.getMale()),
+                                    getRosterDragon(pair.getFemale())
+                            )
+                    )
+                    .toList();
+        }
+        if (gender.equals("female")) {
+            return breedingPairRepository.findByFemaleIdAndWorkspaceId(id, workspaceId).stream()
+                    .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
+                    .map(pair -> new DragonPair(
+                                    pair.getId(),
+                                    pair.getName(),
+                                    getRosterDragon(pair.getMale()),
+                                    getRosterDragon(pair.getFemale())
+                            )
+                    )
+                    .toList();
+        }
+        throw new InvalidRequestException("Invalid search parameters.");
     }
 
     @Transactional

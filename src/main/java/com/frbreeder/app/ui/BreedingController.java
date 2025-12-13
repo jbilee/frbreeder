@@ -32,9 +32,18 @@ public class BreedingController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/pairs")
+    @GetMapping("/pairs/all")
     ResponseEntity<List<DragonPair>> getAllPairs(final Workspace workspace) {
         return ResponseEntity.ok(breedingService.getDragonPairs(workspace.getId()));
+    }
+
+    @GetMapping("/pairs/search")
+    ResponseEntity<List<DragonPair>> getPairsByDragonGender(
+            @RequestParam(value = "gender") final String gender,
+            @RequestParam(value = "id") final Long id,
+            final Workspace workspace
+    ) {
+        return ResponseEntity.ok(breedingService.searchPairByGender(gender, id, workspace.getId()));
     }
 
     @DeleteMapping("/pairs/{id}")

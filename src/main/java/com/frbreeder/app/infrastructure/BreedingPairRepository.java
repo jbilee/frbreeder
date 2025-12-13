@@ -10,6 +10,10 @@ public interface BreedingPairRepository extends ListCrudRepository<BreedingPair,
 
     List<BreedingPair> findAllByWorkspaceId(final Long workspaceId);
 
+    List<BreedingPair> findByMaleIdAndWorkspaceId(final Long maleId, final Long workspaceId);
+
+    List<BreedingPair> findByFemaleIdAndWorkspaceId(final Long femaleId, final Long workspaceId);
+
     void deleteByIdAndWorkspaceId(final Long id, final Long workspaceId);
 
 }

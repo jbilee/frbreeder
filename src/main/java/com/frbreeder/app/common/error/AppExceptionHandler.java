@@ -34,6 +34,13 @@ public class AppExceptionHandler {
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
     }
 
+    @ExceptionHandler(DataConstraintException.class)
+    public ResponseEntity<ErrorResponse> handleDataConstraintException(final Exception e, final HttpServletRequest request) {
+        log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.toString(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleDefaultException(final Exception e, final HttpServletRequest request) {
         log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());

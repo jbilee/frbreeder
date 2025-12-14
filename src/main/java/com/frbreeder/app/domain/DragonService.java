@@ -40,7 +40,8 @@ public class DragonService {
 
     public DragonService(final DragonRepository dragonRepository, final BreedRepository breedRepository,
                          final PrimaryGeneRepository primaryGeneRepository, final SecondaryGeneRepository secondaryGeneRepository,
-                         final TertiaryGeneRepository tertiaryGeneRepository, final BreedingPairRepository breedingPairRepository) {
+                         final TertiaryGeneRepository tertiaryGeneRepository, final BreedingPairRepository breedingPairRepository
+    ) {
         this.dragonRepository = dragonRepository;
         this.breedRepository = breedRepository;
         this.primaryGeneRepository = primaryGeneRepository;
@@ -52,10 +53,10 @@ public class DragonService {
     @Transactional(readOnly = true)
     public RosterDragons getDragons(final Long workspaceId) {
         List<Dragon> dragons = dragonRepository.findAllByWorkspaceId(workspaceId);
-        return new RosterDragons(
-                dragons.stream()
-                        .map(this::getRosterDragon)
-                        .toList()
+        return new RosterDragons(dragons
+                .stream()
+                .map(this::getRosterDragon)
+                .toList()
         );
     }
 
@@ -84,8 +85,11 @@ public class DragonService {
         List<RosterDragon> rosterDragons = new ArrayList<>();
         for (NewDragon requestDragon : request.dragons()) {
             log.info("[SERVICE] workspaceId: {}, frId: {}, scryUrl: {}", workspace.getId(), requestDragon.frId(), requestDragon.scryUrl());
+
             Map<String, Integer> scryDetails = parseScryUrl(requestDragon.scryUrl());
-            Dragon dragon = createDragonFromScryDetails(scryDetails, requestDragon.scryUrl(), requestDragon.frId(), requestDragon.name(), workspace);
+            Dragon dragon = createDragonFromScryDetails(scryDetails, requestDragon.scryUrl(), requestDragon.frId(),
+                    requestDragon.name(), workspace
+            );
             Dragon newDragon = dragonRepository.save(dragon);
             rosterDragons.add(getRosterDragon(newDragon));
         }
@@ -97,7 +101,7 @@ public class DragonService {
         String[] queryPairs = queryParams.split("&");
         Map<String, Integer> scryDetails = new HashMap<>();
 
-        for (final String pair : queryPairs) {
+        for (String pair : queryPairs) {
             String[] keyValue = pair.split("=");
             int value = Integer.parseInt(keyValue[1]);
             scryDetails.put(keyValue[0], value);

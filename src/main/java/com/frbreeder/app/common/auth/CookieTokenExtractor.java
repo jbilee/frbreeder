@@ -7,7 +7,7 @@ public class CookieTokenExtractor {
 
     private static final String TOKEN = "token";
 
-    public String extract(HttpServletRequest request) {
+    public String extract(final HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) return "";

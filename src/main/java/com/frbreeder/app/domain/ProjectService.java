@@ -29,7 +29,10 @@ public class ProjectService {
     private final SecondaryGeneRepository secondaryGeneRepository;
     private final TertiaryGeneRepository tertiaryGeneRepository;
 
-    public ProjectService(final ProjectRepository projectRepository, final BreedRepository breedRepository, final PrimaryGeneRepository primaryGeneRepository, final SecondaryGeneRepository secondaryGeneRepository, final TertiaryGeneRepository tertiaryGeneRepository) {
+    public ProjectService(final ProjectRepository projectRepository, final BreedRepository breedRepository,
+                          final PrimaryGeneRepository primaryGeneRepository, final SecondaryGeneRepository secondaryGeneRepository,
+                          final TertiaryGeneRepository tertiaryGeneRepository
+    ) {
         this.projectRepository = projectRepository;
         this.breedRepository = breedRepository;
         this.primaryGeneRepository = primaryGeneRepository;
@@ -39,10 +42,10 @@ public class ProjectService {
 
     public BreedingProjects getProjects(final Long workspaceId) {
         List<Project> projects = projectRepository.findAllByWorkspaceId(workspaceId);
-        return new BreedingProjects(
-                projects.stream()
-                        .map(this::getBreedingProject)
-                        .toList()
+        return new BreedingProjects(projects
+                .stream()
+                .map(this::getBreedingProject)
+                .toList()
         );
     }
 
@@ -73,7 +76,7 @@ public class ProjectService {
         String[] queryPairs = queryParams.split("&");
         Map<String, Integer> queries = new HashMap<>();
 
-        for (final String pair : queryPairs) {
+        for (String pair : queryPairs) {
             String[] keyValue = pair.split("=");
             int value = Integer.parseInt(keyValue[1]);
             queries.put(keyValue[0], value);

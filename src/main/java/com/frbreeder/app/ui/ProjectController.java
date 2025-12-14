@@ -37,7 +37,9 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<BreedingProject> addNew(@RequestBody final NewProjectRequest request, final Workspace workspace, final UriComponentsBuilder ucb) {
+    public ResponseEntity<BreedingProject> addNew(@RequestBody final NewProjectRequest request, final Workspace workspace,
+                                                  final UriComponentsBuilder ucb
+    ) {
         BreedingProject added = projectService.addProject(request, workspace);
         URI uri = ucb.path("projects/{id}").buildAndExpand(added.id()).toUri();
         return ResponseEntity.created(uri).body(added);

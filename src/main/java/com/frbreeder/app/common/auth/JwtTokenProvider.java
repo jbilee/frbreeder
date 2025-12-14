@@ -20,7 +20,9 @@ public class JwtTokenProvider implements TokenProvider {
     private final int jwtExpirationMs;
     private final SecretKey key;
 
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String jwtSecret, @Value("${security.jwt.token.expire-length}") final int jwtExpirationMs) {
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String jwtSecret,
+                            @Value("${security.jwt.token.expire-length}") final int jwtExpirationMs
+    ) {
         this.jwtExpirationMs = jwtExpirationMs;
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }

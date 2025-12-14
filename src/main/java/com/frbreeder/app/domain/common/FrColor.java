@@ -214,7 +214,8 @@ public enum FrColor {
     }
 
     public static List<String> getInnerColors(final int start, final int end) {
-        return CACHE.values().stream()
+        return CACHE.values()
+                .stream()
                 .filter(color -> color.gradientOrder >= start && color.gradientOrder <= end)
                 .sorted(Comparator.comparing(FrColor::getGradientOrder))
                 .map(color -> color.name)
@@ -222,13 +223,15 @@ public enum FrColor {
     }
 
     public static List<String> getOuterColors(final int start, final int end) {
-        List<String> startingHalf = CACHE.values().stream()
+        List<String> startingHalf = CACHE.values()
+                .stream()
                 .filter(color -> color.gradientOrder <= start)
                 .sorted(Comparator.comparing(FrColor::getGradientOrder))
                 .map(color -> color.name)
                 .toList();
 
-        List<String> endingHalf = CACHE.values().stream()
+        List<String> endingHalf = CACHE.values()
+                .stream()
                 .filter(color -> color.gradientOrder >= end)
                 .sorted(Comparator.comparing(FrColor::getGradientOrder))
                 .map(color -> color.name)

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends ListCrudRepository<Project, Long> {
 
-    List<Project> findAllByWorkspaceId(Long workspaceId);
+    List<Project> findAllByWorkspaceId(final Long workspaceId);
 
-    Optional<Project> findByIdAndWorkspaceId(Long id, Long workspaceId);
+    Optional<Project> findByIdAndWorkspaceId(final Long id, final Long workspaceId);
 
-    void deleteByIdAndWorkspaceId(Long id, Long workspaceId);
+    void deleteByIdAndWorkspaceId(final Long id, final Long workspaceId);
 
 }

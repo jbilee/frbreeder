@@ -30,7 +30,9 @@ public class BreedingService {
     private final BreedingPairRepository breedingPairRepository;
     private final GeneRarityRepository geneRarityRepository;
 
-    public BreedingService(final DragonRepository dragonRepository, final BreedingPairRepository breedingPairRepository, final GeneRarityRepository geneRarityRepository) {
+    public BreedingService(final DragonRepository dragonRepository, final BreedingPairRepository breedingPairRepository,
+                           final GeneRarityRepository geneRarityRepository
+    ) {
         this.dragonRepository = dragonRepository;
         this.breedingPairRepository = breedingPairRepository;
         this.geneRarityRepository = geneRarityRepository;
@@ -81,6 +83,7 @@ public class BreedingService {
         Rarity rarityB = b.getRarity();
         int weightA = rarityA.findWeight(rarityB);
         int weightB = rarityB.findWeight(rarityA);
+
         return List.of(new GeneProbability(a.getName(), weightA), new GeneProbability(b.getName(), weightB));
     }
 
@@ -90,14 +93,15 @@ public class BreedingService {
         }
 
         GeneRarity geneRarityA = geneRarityRepository.findByName(geneNameA)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("The rarity of this gene is not in the database."));
         GeneRarity geneRarityB = geneRarityRepository.findByName(geneNameB)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("The rarity of this gene is not in the database."));
 
         Rarity rarityA = geneRarityA.getRarity();
         Rarity rarityB = geneRarityB.getRarity();
         int weightA = rarityA.findWeight(rarityB);
         int weightB = rarityB.findWeight(rarityA);
+
         return List.of(new GeneProbability(geneNameA, weightA), new GeneProbability(geneNameB, weightB));
     }
 
@@ -134,7 +138,8 @@ public class BreedingService {
     }
 
     public List<DragonPair> getDragonPairs(final long workspaceId) {
-        return breedingPairRepository.findAllByWorkspaceId(workspaceId).stream()
+        return breedingPairRepository.findAllByWorkspaceId(workspaceId)
+                .stream()
                 .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                 .map(pair -> new DragonPair(
                                 pair.getId(),
@@ -168,9 +173,13 @@ public class BreedingService {
     @Transactional
     public void addBreedingPair(final NewPairRequest request, final Workspace workspace) {
         Dragon maleDragon = dragonRepository.findById(request.maleId())
-                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", request.maleId())));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("The dragon by id %d does not exist.", request.maleId()))
+                );
         Dragon femaleDragon = dragonRepository.findById(request.femaleId())
-                .orElseThrow(() -> new NotFoundException(String.format("The dragon by id %d does not exist.", request.femaleId())));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("The dragon by id %d does not exist.", request.femaleId()))
+                );
 
         String maleBreedType = maleDragon.getBreed().getType();
         String femaleBreedType = femaleDragon.getBreed().getType();
@@ -185,7 +194,8 @@ public class BreedingService {
 
     public List<DragonPair> searchPairByGender(final String gender, final Long id, final Long workspaceId) {
         if (gender.equalsIgnoreCase("male")) {
-            return breedingPairRepository.findByMaleIdAndWorkspaceId(id, workspaceId).stream()
+            return breedingPairRepository.findByMaleIdAndWorkspaceId(id, workspaceId)
+                    .stream()
                     .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                     .map(pair -> new DragonPair(
                                     pair.getId(),
@@ -197,7 +207,8 @@ public class BreedingService {
                     .toList();
         }
         if (gender.equalsIgnoreCase("female")) {
-            return breedingPairRepository.findByFemaleIdAndWorkspaceId(id, workspaceId).stream()
+            return breedingPairRepository.findByFemaleIdAndWorkspaceId(id, workspaceId)
+                    .stream()
                     .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                     .map(pair -> new DragonPair(
                                     pair.getId(),

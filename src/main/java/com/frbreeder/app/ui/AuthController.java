@@ -28,8 +28,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<NewWorkspaceDetails> registerWorkspace(@RequestBody final NewWorkspaceRequest request,
-                                                                 final HttpServletResponse response
-    ) {
+                                                                 final HttpServletResponse response) {
         NewWorkspace newWorkspace = workspaceService.register(request);
 
         ResponseCookie cookie = ResponseCookie.from("token", newWorkspace.token())
@@ -45,8 +44,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> loginToWorkspace(@RequestBody final WorkspaceLoginRequest request,
-                                                 final HttpServletResponse response
-    ) {
+                                                 final HttpServletResponse response) {
         TokenResponse tokenResponse = workspaceService.login(request);
 
         ResponseCookie cookie = ResponseCookie.from("token", tokenResponse.accessToken())

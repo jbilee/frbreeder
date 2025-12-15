@@ -38,11 +38,9 @@ public class BreedingController {
     }
 
     @GetMapping("/pairs/search")
-    ResponseEntity<List<DragonPair>> getPairsByDragonGender(
-            @RequestParam(value = "gender") final String gender,
-            @RequestParam(value = "id") final Long id,
-            final Workspace workspace
-    ) {
+    ResponseEntity<List<DragonPair>> getPairsByDragonGender(@RequestParam(value = "gender") final String gender,
+                                                            @RequestParam(value = "id") final Long id,
+                                                            final Workspace workspace) {
         return ResponseEntity.ok(breedingService.searchPairByGender(gender, id, workspace.getId()));
     }
 
@@ -53,10 +51,8 @@ public class BreedingController {
     }
 
     @GetMapping
-    ResponseEntity<BreedingResult> getBreedingResult(
-            @RequestParam(value = "a") final Long parentAId,
-            @RequestParam(value = "b") final Long parentBId
-    ) {
+    ResponseEntity<BreedingResult> getBreedingResult(@RequestParam(value = "a") final Long parentAId,
+                                                     @RequestParam(value = "b") final Long parentBId) {
         return ResponseEntity.ok(breedingService.getResult(parentAId, parentBId));
     }
 

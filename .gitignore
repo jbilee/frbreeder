@@ -28,3 +28,9 @@ replay_pid*
 
 # Gradle
 .gradle
+
+# Build files
+build
+
+# Properties
+.properties

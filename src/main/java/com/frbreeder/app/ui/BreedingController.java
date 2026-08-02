@@ -1,7 +1,6 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.BreedingService;
-import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.BreedingResult;
 import com.frbreeder.app.ui.dto.DragonPair;
 import com.frbreeder.app.ui.dto.NewPairRequest;
@@ -27,26 +26,26 @@ public class BreedingController {
     }
 
     @PostMapping("/pairs")
-    ResponseEntity<Void> createPair(@RequestBody final NewPairRequest request, final Workspace workspace) {
-        breedingService.addBreedingPair(request, workspace);
+    ResponseEntity<Void> createPair(@RequestBody final NewPairRequest request) {
+        breedingService.addBreedingPair(request);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/pairs/all")
-    ResponseEntity<List<DragonPair>> getAllPairs(final Workspace workspace) {
-        return ResponseEntity.ok(breedingService.getDragonPairs(workspace.getId()));
+    ResponseEntity<List<DragonPair>> getAllPairs() {
+        return ResponseEntity.ok(breedingService.getDragonPairs());
     }
 
     @GetMapping("/pairs/search")
     ResponseEntity<List<DragonPair>> getPairsByDragonGender(@RequestParam(value = "gender") final String gender,
-                                                            @RequestParam(value = "id") final Long id,
-                                                            final Workspace workspace) {
-        return ResponseEntity.ok(breedingService.searchPairByGender(gender, id, workspace.getId()));
+                                                            @RequestParam(value = "id") final Long id
+    ) {
+        return ResponseEntity.ok(breedingService.searchPairByGender(gender, id));
     }
 
     @DeleteMapping("/pairs/{id}")
-    ResponseEntity<Void> deletePair(@PathVariable("id") final Long id, final Workspace workspace) {
-        breedingService.deletePair(id, workspace.getId());
+    ResponseEntity<Void> deletePair(@PathVariable("id") final Long id) {
+        breedingService.deletePair(id);
         return ResponseEntity.ok().build();
     }
 

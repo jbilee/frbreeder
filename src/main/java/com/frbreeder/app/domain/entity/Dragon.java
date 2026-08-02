@@ -46,10 +46,6 @@ public class Dragon {
     @JoinColumn(name = "breed_id", nullable = false)
     private Breed breed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workspace_id", nullable = false)
-    private Workspace workspace;
-
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -61,7 +57,7 @@ public class Dragon {
 
     public Dragon(final Long frId, final String scryUrl, final String name, final Breed breed, final int gender,
                   final String primaryGene, final String secondaryGene, final String tertiaryGene, final int primaryColorId,
-                  final int secondaryColorId, final int tertiaryColorId, final String flight, final Workspace workspace
+                  final int secondaryColorId, final int tertiaryColorId, final String flight
     ) {
         validateGender(gender);
         validateColors(primaryColorId, secondaryColorId, tertiaryColorId);
@@ -78,7 +74,6 @@ public class Dragon {
         this.secondaryColorId = secondaryColorId;
         this.tertiaryColorId = tertiaryColorId;
         this.flight = flight;
-        this.workspace = workspace;
     }
 
     private void validateGender(final int gender) {
@@ -145,10 +140,6 @@ public class Dragon {
 
     public String getFlight() {
         return flight;
-    }
-
-    public Workspace getWorkspace() {
-        return workspace;
     }
 
     @Override

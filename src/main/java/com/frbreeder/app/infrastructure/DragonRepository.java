@@ -16,9 +16,9 @@ public interface DragonRepository extends ListCrudRepository<Dragon, Long> {
             "secondaryGene",
             "tertiaryGene"
     })
-    List<Dragon> findAllByWorkspaceId(final Long workspaceId);
+    List<Dragon> findAll();
 
-    Optional<Dragon> findByIdAndWorkspaceId(final Long id, final Long workspaceId);
+    Optional<Dragon> findById(final Long id);
 
     void deleteById(final Long id);
 

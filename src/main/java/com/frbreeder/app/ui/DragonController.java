@@ -1,7 +1,6 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.DragonService;
-import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.NewDragonRequest;
 import com.frbreeder.app.ui.dto.RegisteredDragon;
 import com.frbreeder.app.ui.dto.RosterDragon;
@@ -27,29 +26,29 @@ public class DragonController {
     }
 
     @GetMapping
-    public ResponseEntity<RosterDragons> getAll(final Workspace workspace) {
-        return ResponseEntity.ok(dragonService.getDragons(workspace.getId()));
+    public ResponseEntity<RosterDragons> getAll() {
+        return ResponseEntity.ok(dragonService.getDragons());
     }
 
     @GetMapping("/registrations/{id}")
-    public ResponseEntity<RegisteredDragon> getRegisteredDetails(@PathVariable("id") final Long id, final Workspace workspace) {
-        return ResponseEntity.ok(dragonService.getRegisteredDragon(id, workspace.getId()));
+    public ResponseEntity<RegisteredDragon> getRegisteredDetails(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(dragonService.getRegisteredDragon(id));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RosterDragon> getOne(@PathVariable("id") final Long id, final Workspace workspace) {
-        return ResponseEntity.ok(dragonService.getDragon(id, workspace.getId()));
+    public ResponseEntity<RosterDragon> getOne(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(dragonService.getDragon(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOne(@PathVariable("id") final Long id, final Workspace workspace) {
-        dragonService.deleteDragon(id, workspace.getId());
+    public ResponseEntity<Void> deleteOne(@PathVariable("id") final Long id) {
+        dragonService.deleteDragon(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping
-    public ResponseEntity<RosterDragons> addNew(@RequestBody final NewDragonRequest request, final Workspace workspace) {
-        RosterDragons added = dragonService.addDragons(workspace, request);
+    public ResponseEntity<RosterDragons> addNew(@RequestBody final NewDragonRequest request) {
+        RosterDragons added = dragonService.addDragons(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(added);
     }
 

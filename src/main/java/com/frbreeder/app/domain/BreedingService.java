@@ -8,7 +8,6 @@ import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.BreedingPair;
 import com.frbreeder.app.domain.entity.Dragon;
 import com.frbreeder.app.domain.entity.GeneRarity;
-import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedingPairRepository;
 import com.frbreeder.app.infrastructure.DragonRepository;
 import com.frbreeder.app.infrastructure.GeneRarityRepository;
@@ -137,8 +136,8 @@ public class BreedingService {
         return FrColor.TOTAL_COLORS - distance;
     }
 
-    public List<DragonPair> getDragonPairs(final long workspaceId) {
-        return breedingPairRepository.findAllByWorkspaceId(workspaceId)
+    public List<DragonPair> getDragonPairs() {
+        return breedingPairRepository.findAll()
                 .stream()
                 .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                 .map(pair -> new DragonPair(
@@ -171,7 +170,7 @@ public class BreedingService {
     }
 
     @Transactional
-    public void addBreedingPair(final NewPairRequest request, final Workspace workspace) {
+    public void addBreedingPair(final NewPairRequest request) {
         Dragon maleDragon = dragonRepository.findById(request.maleId())
                 .orElseThrow(() -> new NotFoundException(
                         String.format("The dragon by id %d does not exist.", request.maleId()))
@@ -187,14 +186,14 @@ public class BreedingService {
             throw new InvalidRequestException("Modern and ancient dragons cannot breed with each other.");
         }
 
-        BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon, workspace);
+        BreedingPair breedingPair = new BreedingPair(request.name(), maleDragon, femaleDragon);
 
         breedingPairRepository.save(breedingPair);
     }
 
-    public List<DragonPair> searchPairByGender(final String gender, final Long id, final Long workspaceId) {
+    public List<DragonPair> searchPairByGender(final String gender, final Long id) {
         if (gender.equalsIgnoreCase("male")) {
-            return breedingPairRepository.findByMaleIdAndWorkspaceId(id, workspaceId)
+            return breedingPairRepository.findByMaleId(id)
                     .stream()
                     .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                     .map(pair -> new DragonPair(
@@ -207,7 +206,7 @@ public class BreedingService {
                     .toList();
         }
         if (gender.equalsIgnoreCase("female")) {
-            return breedingPairRepository.findByFemaleIdAndWorkspaceId(id, workspaceId)
+            return breedingPairRepository.findByFemaleId(id)
                     .stream()
                     .filter(pair -> pair.getMale() != null && pair.getFemale() != null)
                     .map(pair -> new DragonPair(
@@ -223,8 +222,8 @@ public class BreedingService {
     }
 
     @Transactional
-    public void deletePair(final Long id, final Long workspaceId) {
-        breedingPairRepository.deleteByIdAndWorkspaceId(id, workspaceId);
+    public void deletePair(final Long id) {
+        breedingPairRepository.deleteById(id);
     }
 
 }

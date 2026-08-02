@@ -1,7 +1,6 @@
 package com.frbreeder.app.ui;
 
 import com.frbreeder.app.domain.ProjectService;
-import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.ui.dto.BreedingProject;
 import com.frbreeder.app.ui.dto.BreedingProjects;
 import com.frbreeder.app.ui.dto.NewProjectRequest;
@@ -27,26 +26,26 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<BreedingProjects> getAll(final Workspace workspace) {
-        return ResponseEntity.ok(projectService.getProjects(workspace.getId()));
+    public ResponseEntity<BreedingProjects> getAll() {
+        return ResponseEntity.ok(projectService.getProjects());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BreedingProject> getOne(@PathVariable("id") final Long id, final Workspace workspace) {
-        return ResponseEntity.ok(projectService.getProject(workspace.getId(), id));
+    public ResponseEntity<BreedingProject> getOne(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(projectService.getProject(id));
     }
 
     @PostMapping
-    public ResponseEntity<BreedingProject> addNew(@RequestBody final NewProjectRequest request, final Workspace workspace,
+    public ResponseEntity<BreedingProject> addNew(@RequestBody final NewProjectRequest request,
                                                   final UriComponentsBuilder ucb) {
-        BreedingProject added = projectService.addProject(request, workspace);
+        BreedingProject added = projectService.addProject(request);
         URI uri = ucb.path("projects/{id}").buildAndExpand(added.id()).toUri();
         return ResponseEntity.created(uri).body(added);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteOne(@PathVariable("id") final Long id, final Workspace workspace) {
-        projectService.deleteProject(id, workspace.getId());
+    public ResponseEntity<Void> deleteOne(@PathVariable("id") final Long id) {
+        projectService.deleteProject(id);
         return ResponseEntity.ok().build();
     }
 

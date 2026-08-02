@@ -5,7 +5,6 @@ import com.frbreeder.app.common.error.NotFoundException;
 import com.frbreeder.app.domain.common.FrColor;
 import com.frbreeder.app.domain.entity.Breed;
 import com.frbreeder.app.domain.entity.Project;
-import com.frbreeder.app.domain.entity.Workspace;
 import com.frbreeder.app.infrastructure.BreedRepository;
 import com.frbreeder.app.infrastructure.PrimaryGeneRepository;
 import com.frbreeder.app.infrastructure.ProjectRepository;
@@ -40,8 +39,8 @@ public class ProjectService {
         this.tertiaryGeneRepository = tertiaryGeneRepository;
     }
 
-    public BreedingProjects getProjects(final Long workspaceId) {
-        List<Project> projects = projectRepository.findAllByWorkspaceId(workspaceId);
+    public BreedingProjects getProjects() {
+        List<Project> projects = projectRepository.findAll();
         return new BreedingProjects(projects
                 .stream()
                 .map(this::getBreedingProject)
@@ -50,8 +49,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public BreedingProject addProject(final NewProjectRequest request, final Workspace workspace) {
-        Project project = parseScryUrl(request.frId(), request.name(), request.scryUrl(), workspace);
+    public BreedingProject addProject(final NewProjectRequest request) {
+        Project project = parseScryUrl(request.frId(), request.name(), request.scryUrl());
         Project newProject = projectRepository.save(project);
         return getBreedingProject(newProject);
     }
@@ -71,7 +70,7 @@ public class ProjectService {
         );
     }
 
-    private Project parseScryUrl(final Long frId, final String name, final String url, final Workspace workspace) {
+    private Project parseScryUrl(final Long frId, final String name, final String url) {
         String queryParams = url.substring(url.indexOf("?") + 1);
         String[] queryPairs = queryParams.split("&");
         Map<String, Integer> queries = new HashMap<>();
@@ -94,8 +93,7 @@ public class ProjectService {
                 queries.get("body"),
                 queries.get("wings"),
                 queries.get("tert"),
-                queries.get("element").toString(),
-                workspace
+                queries.get("element").toString()
         );
     }
 
@@ -123,12 +121,12 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteProject(final Long id, final Long workspaceId) {
-        projectRepository.deleteByIdAndWorkspaceId(id, workspaceId);
+    public void deleteProject(final Long id) {
+        projectRepository.deleteById(id);
     }
 
-    public BreedingProject getProject(final Long workspaceId, final Long id) {
-        Project project = projectRepository.findByIdAndWorkspaceId(id, workspaceId)
+    public BreedingProject getProject(final Long id) {
+        Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("The project by that id does not exist."));
         return getBreedingProject(project);
     }

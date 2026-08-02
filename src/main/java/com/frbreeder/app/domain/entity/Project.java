@@ -44,10 +44,6 @@ public class Project {
     @JoinColumn(name = "breed_id", nullable = false)
     private Breed breed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workspace_id", nullable = false)
-    private Workspace workspace;
-
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -60,7 +56,7 @@ public class Project {
     public Project(
             final Long frId, final String name, final String scryUrl, final Breed breed, final int gender,
             final String primaryGene, final String secondaryGene, final String tertiaryGene, final int primaryColorId,
-            final int secondaryColorId, final int tertiaryColorId, final String flight, final Workspace workspace
+            final int secondaryColorId, final int tertiaryColorId, final String flight
     ) {
         this.frId = frId;
         this.name = name == null ? "New Project" : name;
@@ -74,7 +70,6 @@ public class Project {
         this.secondaryColorId = secondaryColorId;
         this.tertiaryColorId = tertiaryColorId;
         this.flight = flight;
-        this.workspace = workspace;
     }
 
     public long getId() {
@@ -127,10 +122,6 @@ public class Project {
 
     public String getFlight() {
         return flight;
-    }
-
-    public Workspace getWorkspace() {
-        return workspace;
     }
 
     @Override

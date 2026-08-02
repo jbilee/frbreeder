@@ -8,16 +8,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BreedingPairRepository extends ListCrudRepository<BreedingPair, Long> {
 
-    List<BreedingPair> findAllByWorkspaceId(final Long workspaceId);
+    List<BreedingPair> findAll();
 
-    List<BreedingPair> findByMaleIdAndWorkspaceId(final Long maleId, final Long workspaceId);
+    List<BreedingPair> findByMaleId(final Long maleId);
 
-    List<BreedingPair> findByFemaleIdAndWorkspaceId(final Long femaleId, final Long workspaceId);
+    List<BreedingPair> findByFemaleId(final Long femaleId);
 
-    boolean existsByMaleIdAndWorkspaceId(final Long maleId, final Long workspaceId);
+    boolean existsByMaleId(final Long maleId);
 
-    boolean existsByFemaleIdAndWorkspaceId(final Long femaleId, final Long workspaceId);
+    boolean existsByFemaleId(final Long femaleId);
 
-    void deleteByIdAndWorkspaceId(final Long id, final Long workspaceId);
+    void deleteById(final Long id);
 
 }

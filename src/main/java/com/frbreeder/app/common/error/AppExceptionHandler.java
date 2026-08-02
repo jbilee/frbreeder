@@ -41,12 +41,6 @@ public class AppExceptionHandler {
                 .body(new ErrorResponse(HttpStatus.CONFLICT.toString(), e.getMessage()));
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorizedException(final Exception e, final HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), e.getMessage()));
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleDefaultException(final Exception e, final HttpServletRequest request) {
         log.warn("[REQUEST] {} {} | {}", request.getMethod(), request.getRequestURI(), e.toString());
